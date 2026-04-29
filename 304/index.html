@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Đếm Ngược Nghỉ Lễ 30/4 - 1/5</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* Tránh bôi đen khi nhấn giữ */
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #0a2f3a 0%, #0a1f2a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Roboto', 'Poppins', system-ui, -apple-system, 'Be Vietnam Pro', sans-serif;
+            padding: 1rem;
+        }
+
+        /* Container chính với hiệu ứng kính và bóng đổ */
+        .countdown-card {
+            max-width: 750px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 3.5rem;
+            padding: 2rem 1.8rem 2.5rem 1.8rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.15);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* Tiêu đề chính */
+        .holiday-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFD966, #FFB347);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .sub {
+            color: #c0e0ff;
+            font-size: 1rem;
+            font-weight: 500;
+            background: rgba(0, 0, 0, 0.4);
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            margin-bottom: 2rem;
+        }
+
+        /* Bộ đếm chính: hiển thị các khối */
+        .timer-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .time-card {
+            background: rgba(10, 25, 35, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 2rem;
+            padding: 1rem 0.8rem;
+            min-width: 110px;
+            flex: 1 0 auto;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 3px solid #FFB347;
+            transition: transform 0.2s;
+        }
+
+        .time-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .time-number {
+            font-size: 3.8rem;
+            font-weight: 800;
+            font-family: 'Monaco', 'Courier New', monospace;
+            background: linear-gradient(145deg, #FFE6C7, #FFC48A);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            letter-spacing: 2px;
+        }
+
+        .time-label {
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #FFD966;
+            margin-top: 0.4rem;
+        }
+
+        /* Thông báo đặc biệt và nút */
+        .message-area {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 2rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            color: #FADB67;
+            font-size: 1.1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-reset {
+            background: #FFB347;
+            border: none;
+            color: #1e2a32;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 0.7rem 1.6rem;
+            border-radius: 2.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-reset:hover {
+            background: #FFA01E;
+            transform: scale(1.02);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+        }
+
+        .btn-reset:active {
+            transform: scale(0.98);
+        }
+
+        .note-time {
+            font-size: 0.8rem;
+            margin-top: 1.8rem;
+            color: #9bb7d4;
+            background: rgba(0,0,0,0.2);
+            padding: 0.4rem;
+            border-radius: 2rem;
+            display: inline-block;
+            width: auto;
+        }
+
+        /* Responsive cho mobile */
+        @media (max-width: 550px) {
+            .countdown-card {
+                padding: 1.5rem 1rem;
+            }
+            .time-card {
+                min-width: 75px;
+                padding: 0.6rem 0.3rem;
+            }
+            .time-number {
+                font-size: 2.2rem;
+            }
+            .time-label {
+                font-size: 0.7rem;
+            }
+            .holiday-title {
+                font-size: 1.7rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .timer-grid {
+                gap: 0.6rem;
+            }
+            .time-number {
+                font-size: 1.9rem;
+            }
+        }
+
+        footer {
+            font-size: 0.7rem;
+            margin-top: 20px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="countdown-card">
+    <div class="holiday-title">🎉 KỲ NGHỈ LỄ 30/4 - 1/5 🎉</div>
+    <div class="sub">🇻🇳 Giải phóng miền Nam - Quốc tế Lao động 🇻🇳</div>
+
+    <!-- Bảng đồng hồ đếm ngược -->
+    <div class="timer-grid">
+        <div class="time-card">
+            <div class="time-number" id="days">00</div>
+            <div class="time-label">NGÀY</div>
+        </div>
+        <div class="time-card">
+            <div class="time-number" id="hours">00</div>
+            <div class="time-label">GIỜ</div>
+        </div>
+        <div class="time-card">
+            <div class="time-number" id="minutes">00</div>
+            <div class="time-label">PHÚT</div>
+        </div>
+        <div class="time-card">
+            <div class="time-number" id="seconds">00</div>
+            <div class="time-label">GIÂY</div>
+        </div>
+    </div>
+
+    <!-- Khu vực thông báo trạng thái (đã đến giờ nghỉ / chúc mừng) -->
+    <div class="message-area" id="statusMessage">
+        🕒 Đếm ngược đến 18:00 ngày 30/4/2026
+    </div>
+
+    <!-- Nút làm mới / đồng bộ thời gian ( tính lại dựa trên thời gian thực) -->
+    <button class="btn-reset" id="refreshBtn">⟳ Cập nhật thời gian hiện tại</button>
+    
+    <div class="note-time">
+        📍 Mốc thời gian: <strong>18:00 ngày 30 tháng 4 năm 2026</strong><br>
+        (Bắt đầu kỳ nghỉ lễ 30/4 & 1/5)
+    </div>
+    <footer>⏱️ Đồng hồ tính đến 18h hôm nay (theo giờ thiết bị của bạn)</footer>
+</div>
+
+<script>
+    (function() {
+        // ------------------------------------------------
+        // MỐC THỜI GIAN ĐÍCH: 18:00 ngày 30/4/2026
+        // Lưu ý: tháng trong Javascript (0-11) => Tháng 4 là index 3
+        // Ngày 30 tháng 4 năm 2026, 18 giờ 00 phút 00 giây
+        // ------------------------------------------------
+        const TARGET_YEAR = 2026;
+        const TARGET_MONTH = 3;      // Tháng 4 (0=Jan)
+        const TARGET_DAY = 29;
+        const TARGET_HOUR = 18;
+        const TARGET_MINUTE = 0;
+        const TARGET_SECOND = 0;
+        
+        // DOM elements
+        const daysSpan = document.getElementById('days');
+        const hoursSpan = document.getElementById('hours');
+        const minutesSpan = document.getElementById('minutes');
+        const secondsSpan = document.getElementById('seconds');
+        const messageDiv = document.getElementById('statusMessage');
+        
+        // Hàm tạo đối tượng Date của mốc đích (dựa trên múi giờ local của thiết bị)
+        // Điều quan trọng: người dùng muốn đếm đến 18h ngày 30/4 theo MÚI GIỜ CỦA HỌ.
+        // Sử dụng setHours để đảm bảo giờ cục bộ.
+        function getTargetDate() {
+            // Tạo ngày tại địa phương (year, month, day, hour, minute, second)
+            // Lưu ý: new Date(year, month, day, hour, minute, second) dùng giờ local
+            return new Date(TARGET_YEAR, TARGET_MONTH, TARGET_DAY, TARGET_HOUR, TARGET_MINUTE, TARGET_SECOND);
+        }
+        
+        // Hàm định dạng số (luôn 2 chữ số)
+        function formatNumber(num) {
+            return num < 10 ? '0' + num : '' + num;
+        }
+        
+        // Hàm cập nhật đồng hồ dựa trên thời gian hiện tại
+        function updateCountdown() {
+            const now = new Date();                 // Thời điểm hiện tại (local)
+            const target = getTargetDate();         // Mốc 30/4/2026 18:00 local
+            
+            // Tính chênh lệch (milliseconds)
+            let diff = target.getTime() - now.getTime();
+            
+            // Kiểm tra nếu đã qua mốc nghỉ lễ
+            if (diff <= 0) {
+                // Đã đến hoặc qua thời gian nghỉ
+                daysSpan.innerText = '00';
+                hoursSpan.innerText = '00';
+                minutesSpan.innerText = '00';
+                secondsSpan.innerText = '00';
+                messageDiv.innerHTML = '🎉🎊 CHÚC MỪNG! BẮT ĐẦU KỲ NGHỈ LỄ 30/4 - 1/5 🎊🎉 <br> 🇻🇳 Vui vẻ, an toàn, hạnh phúc! 🇻🇳';
+                return;
+            }
+            
+            // Tính các đơn vị thời gian
+            const totalSeconds = Math.floor(diff / 1000);
+            const days = Math.floor(totalSeconds / 86400);
+            const hours = Math.floor((totalSeconds % 86400) / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            
+            // Hiển thị lên giao diện
+            daysSpan.innerText = formatNumber(days);
+            hoursSpan.innerText = formatNumber(hours);
+            minutesSpan.innerText = formatNumber(minutes);
+            secondsSpan.innerText = formatNumber(seconds);
+            
+            // Tạo thông báo thêm phần hấp dẫn, nếu còn dưới 3 ngày có thể thông báo đặc biệt
+            let extraMsg = '';
+            if (days === 0 && hours <= 6 && hours >= 0) {
+                extraMsg = ' ⏰ Sắp đến giờ nghỉ rồi!!! Chuẩn bị xách balo lên thôi! 🧳';
+            } else if (days === 0 && hours < 1 && minutes < 60) {
+                extraMsg = ' 🔥 Cận kề giờ nghỉ, nóng lòng quá! 🔥';
+            } else if (days < 3) {
+                extraMsg = ` ✨ Chỉ còn ${days} ngày nữa là tận hưởng kỳ nghỉ dài ✨`;
+            } else {
+                extraMsg = ' 🕒 Hãy cùng đếm ngược đến khoảnh khắc nghỉ lễ nào!';
+            }
+            
+            messageDiv.innerHTML = `⏳ Còn chính xác: ${days} ngày, ${hours} giờ, ${minutes} phút, ${seconds} giây nữa là đến 18:00 ngày 30/4/2026. ${extraMsg}`;
+        }
+        
+        // Hàm đồng bộ và hiển thị ngay thời gian thực, có thể dùng nút refresh để cập nhật ngay (dù setInterval vẫn chạy)
+        function syncTimer() {
+            updateCountdown();
+            // thêm hiệu ứng phản hồi ngắn (tuỳ chọn)
+            const btn = document.getElementById('refreshBtn');
+            if (btn) {
+                btn.style.transform = 'scale(0.97)';
+                setTimeout(() => { if(btn) btn.style.transform = ''; }, 150);
+            }
+        }
+        
+        // Thiết lập interval cập nhật mỗi giây
+        let intervalId = setInterval(updateCountdown, 1000);
+        
+        // Xử lý nút refresh: dừng interval cũ (tránh trùng) và khởi tạo lại, đồng thời cập nhật ngay
+        const refreshBtn = document.getElementById('refreshBtn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => {
+                // Xóa interval cũ, tạo lại mới để tránh có thể có độ trễ dồn (nhưng thực chất không cần thiết, chỉ reset lại an toàn)
+                if (intervalId) clearInterval(intervalId);
+                // Cập nhật đồng hồ ngay lập tức
+                updateCountdown();
+                // Tạo interval mới
+                intervalId = setInterval(updateCountdown, 1000);
+                // Hiển thị thông báo tạm thời (tùy chọn, không làm rối)
+                const originalMsg = messageDiv.innerHTML;
+                messageDiv.style.transition = '0.2s';
+                messageDiv.style.backgroundColor = 'rgba(255,180,70,0.3)';
+                setTimeout(() => {
+                    if (messageDiv) messageDiv.style.backgroundColor = '';
+                }, 300);
+            });
+        }
+        
+        // Đảm bảo mọi thứ được khởi tạo đúng lúc
+        updateCountdown();
+        
+        // Xử lý khi tab ẩn, vẫn chạy tốt, nhưng có thể giảm tải? Không sao.
+        // Thêm kiểm tra nếu có lỗi timezone không ảnh hưởng vì chúng ta xây dựng mốc hoàn toàn dựa trên local.
+        // Tuỳ chọn: mỗi khi đồng hồ chạy, nếu diff bị NaN thì khôi phục (fallback hiếm khi)
+        window.addEventListener('load', () => {
+            updateCountdown();
+        });
+        
+        // Xử lý trường hợp máy tính thay đổi thời gian hệ thống trong lúc chạy: setInterval vẫn cập nhật mỗi giây
+        // nên sẽ tự động bắt kịp. Không cần làm thêm.
+        
+        // Bonus: Xuất ra console để debug mốc thời gian đang đếm
+        console.log('Mốc đếm ngược:', getTargetDate().toString());
+        console.log('Thời gian hiện tại (local):', new Date().toString());
+    })();
+</script>
+</body>
+</html>
