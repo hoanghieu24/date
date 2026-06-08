@@ -2,768 +2,784 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>COUNTDOWN</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>ĐẾM NGƯỢC | Đồng Hồ Cao Cấp</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-:root{
-  --bg:#060608;
-  --s1:#0d0d14;
-  --s2:#13131e;
-  --border:#1e1e2e;
-  --border2:#2a2a40;
-  --green:#00ffaa;
-  --green2:#00cc88;
-  --purple:#8b5cf6;
-  --pink:#f472b6;
-  --text:#e8e8f0;
-  --muted:#484868;
-  --muted2:#6b6b88;
-  --white:#ffffff;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Space Grotesk',sans-serif;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  position:relative;
+:root {
+  --bg-dark: #020308;
+  --card-bg: rgba(8, 12, 22, 0.75);
+  --border-glow: rgba(0, 255, 170, 0.3);
+  --green-primary: #00ffaa;
+  --green-primary-dark: #00cc88;
+  --purple-grad: #a855f7;
+  --pink-accent: #f472b6;
+  --text-white: #ffffff;
+  --text-silver: #cdd9ff;
+  --text-muted: #6c7a9e;
 }
 
-/* ── CANVAS BG ── */
-#bg-canvas{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  opacity:0.6;
+body {
+  background: var(--bg-dark);
+  font-family: 'Inter', 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* ── GRID OVERLAY ── */
-.grid-overlay{
-  position:fixed;
-  inset:0;
-  z-index:1;
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size:60px 60px;
-  opacity:0.15;
-  pointer-events:none;
+/* 背景粒子 Canvas */
+#particle-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
-/* ── GLOW ORBS ── */
-.orb{
-  position:fixed;
-  border-radius:50%;
-  filter:blur(120px);
-  opacity:0.15;
-  pointer-events:none;
-  z-index:1;
-  animation:orb-drift 12s ease-in-out infinite alternate;
-}
-.orb1{width:700px;height:700px;background:var(--purple);top:-200px;right:-200px;animation-duration:14s}
-.orb2{width:600px;height:600px;background:var(--green);bottom:-200px;left:-200px;animation-duration:11s}
-.orb3{width:400px;height:400px;background:var(--pink);top:40%;left:40%;transform:translate(-50%,-50%);animation-duration:9s;opacity:0.07}
-@keyframes orb-drift{
-  0%{transform:translate(0,0) scale(1)}
-  100%{transform:translate(40px,30px) scale(1.08)}
+/* 科技网格 */
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0, 255, 170, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 170, 0.07) 1px, transparent 1px);
+  background-size: 45px 45px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
 }
 
-/* ── MAIN WRAP ── */
-.wrap{
-  position:relative;
-  z-index:10;
-  width:100%;
-  max-width:580px;
-  padding:2rem 1.5rem;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:0;
+/* 光晕球体 */
+.glow-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(130px);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.25;
+  animation: floatOrb 16s infinite alternate ease-in-out;
+}
+.orb-1 { width: 65vmin; height: 65vmin; background: var(--purple-grad); top: -12%; right: -8%; }
+.orb-2 { width: 75vmin; height: 75vmin; background: var(--green-primary); bottom: -18%; left: -12%; opacity: 0.2; animation-duration: 20s; }
+.orb-3 { width: 45vmin; height: 45vmin; background: var(--pink-accent); top: 45%; left: 20%; opacity: 0.18; filter: blur(100px); animation-duration: 13s; }
+
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(4%, 5%) scale(1.1); }
 }
 
-/* ── HEADER ── */
-header{
-  text-align:center;
-  margin-bottom:2.5rem;
-}
-.eyebrow{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  letter-spacing:0.3em;
-  color:var(--green);
-  text-transform:uppercase;
-  margin-bottom:1rem;
-  padding:6px 16px;
-  border:1px solid rgba(0,255,170,0.2);
-  border-radius:100px;
-  background:rgba(0,255,170,0.04);
-}
-.eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse-dot 1.5s ease-in-out infinite}
-@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.6)}}
-
-h1{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(4rem,14vw,7rem);
-  line-height:0.9;
-  letter-spacing:0.04em;
-  background:linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.4) 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-h1 .accent{
-  background:linear-gradient(135deg, var(--green) 0%, var(--purple) 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
+/* 主容器 */
+.app-container {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  max-width: 640px;
+  margin: 1rem;
+  padding: 0.5rem;
 }
 
-/* ── CARD ── */
-.card{
-  width:100%;
-  background:rgba(13,13,20,0.8);
-  border:1px solid var(--border2);
-  border-radius:24px;
-  padding:2rem;
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  box-shadow:0 0 0 1px rgba(255,255,255,0.03), 0 32px 80px rgba(0,0,0,0.6);
-  transition:all 0.5s cubic-bezier(0.16,1,0.3,1);
+/* ========= 头部 - 字体超级漂亮 ========= */
+.header-area {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.badge-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 255, 170, 0.08);
+  border: 1px solid rgba(0, 255, 170, 0.35);
+  border-radius: 60px;
+  padding: 0.5rem 1.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--green-primary);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  backdrop-filter: blur(8px);
+}
+.badge-timer::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--green-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--green-primary);
+  animation: pulseDot 1.5s infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.6); }
 }
 
-/* ── TABS ── */
-.tabs{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-  background:var(--bg);
-  border-radius:14px;
-  padding:4px;
-  border:1px solid var(--border);
-  margin-bottom:1.75rem;
+/* Chữ ĐẾM NGƯỢC siêu đẹp - chuẩn nét */
+.main-title {
+  font-family: 'Inter', 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: clamp(3.2rem, 13vw, 7rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-top: 0.2rem;
 }
-.tab{
-  padding:0.65rem 1rem;
-  border:1px solid transparent;
-  border-radius:10px;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:13px;
-  font-weight:600;
-  cursor:pointer;
-  background:transparent;
-  color:var(--muted2);
-  transition:all 0.25s;
-  letter-spacing:0.02em;
+.title-line1 {
+  display: block;
+  background: linear-gradient(115deg, #FFFFFF 0%, #C0E0FF 45%, #FFFFFF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 12px rgba(0,255,170,0.15);
 }
-.tab.active{
-  background:var(--s2);
-  color:var(--text);
-  border-color:var(--border2);
-  box-shadow:0 2px 12px rgba(0,0,0,0.3);
+.title-line2 {
+  display: block;
+  background: linear-gradient(125deg, #00ffaa, #b87eff, #f472b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 12px rgba(0,255,170,0.3));
+  letter-spacing: -0.01em;
 }
 
-/* ── INPUTS ── */
-.fields{display:flex;flex-direction:column;gap:1rem}
-.field{display:flex;flex-direction:column;gap:8px}
-.row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end}
-.row-arrow{
-  display:flex;align-items:center;justify-content:center;
-  padding-bottom:14px;
-  color:var(--muted);font-size:18px;
+/* Glass card chính */
+.glass-card {
+  background: rgba(6, 10, 20, 0.75);
+  backdrop-filter: blur(20px);
+  border-radius: 2rem;
+  border: 1px solid rgba(0, 255, 170, 0.25);
+  box-shadow: 0 25px 40px -16px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  padding: 1.8rem 1.6rem;
+  transition: all 0.2s;
 }
 
-label{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  letter-spacing:0.2em;
-  color:var(--muted2);
-  text-transform:uppercase;
+/* Tabs */
+.tab-bar {
+  display: flex;
+  gap: 0.6rem;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.4rem;
+  border-radius: 3rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0.7rem 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  border-radius: 2.5rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab.active {
+  background: linear-gradient(105deg, rgba(0, 255, 170, 0.18), rgba(168, 85, 247, 0.12));
+  color: white;
+  box-shadow: 0 0 12px rgba(0, 255, 170, 0.2);
+  border: 1px solid rgba(0, 255, 170, 0.5);
 }
 
-input[type=number],input[type=time]{
-  background:var(--bg);
-  border:1px solid var(--border2);
-  border-radius:12px;
-  padding:0.85rem 1rem;
-  color:var(--text);
-  font-family:'JetBrains Mono',monospace;
-  font-size:22px;
-  font-weight:500;
-  width:100%;
-  outline:none;
-  transition:all 0.2s;
-  text-align:center;
-  -moz-appearance:textfield;
+/* input style */
+.field-group label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--green-primary);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.5rem;
 }
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-input:focus{
-  border-color:var(--green);
-  box-shadow:0 0 0 3px rgba(0,255,170,0.08);
-  background:rgba(0,255,170,0.02);
+.modern-input {
+  width: 100%;
+  background: rgba(1, 3, 12, 0.9);
+  border: 1.5px solid rgba(0, 255, 170, 0.3);
+  border-radius: 1.6rem;
+  padding: 0.9rem 1.2rem;
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s;
 }
-
-.hint{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  color:var(--muted);
-  text-align:center;
-  letter-spacing:0.05em;
+.modern-input:focus {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 3px rgba(0, 255, 170, 0.2);
+  background: #050a15;
 }
-
-.err{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  color:#ff4466;
-  text-align:center;
-  min-height:16px;
-  letter-spacing:0.05em;
+.time-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
 }
-
-/* ── START BUTTON ── */
-.btn-start{
-  width:100%;
-  margin-top:0.25rem;
-  padding:1.1rem 2rem;
-  background:linear-gradient(135deg, var(--green) 0%, #00cc88 100%);
-  color:#000;
-  border:none;
-  border-radius:14px;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:15px;
-  font-weight:700;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  cursor:pointer;
-  position:relative;
-  overflow:hidden;
-  transition:all 0.25s;
+.arrow-symbol {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--green-primary);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 5px #00ffaa80;
 }
-.btn-start::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
-  opacity:0;
-  transition:opacity 0.25s;
+.hint-sm {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 0.6rem;
+  font-family: monospace;
 }
-.btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,255,170,0.25)}
-.btn-start:hover::before{opacity:1}
-.btn-start:active{transform:translateY(0)}
-
-/* ── TIMER PANEL ── */
-#panel-timer{display:none;flex-direction:column;align-items:center;gap:2rem;width:100%}
-
-.timer-top{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
+.error-msg {
+  min-height: 2.5rem;
+  color: #ff6b8b;
+  font-size: 0.75rem;
+  text-align: center;
+  font-family: monospace;
 }
-.timer-range-label{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  letter-spacing:0.15em;
-  color:var(--green);
-  text-transform:uppercase;
+.btn-primary {
+  background: linear-gradient(98deg, #00ffaa, #00cc99);
+  width: 100%;
+  border: none;
+  border-radius: 3rem;
+  padding: 1rem;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  color: #03060c;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 6px 18px rgba(0, 255, 170, 0.25);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 255, 170, 0.45);
 }
 
-/* ── BIG RING ── */
-.ring-outer{
-  position:relative;
-  width:280px;
-  height:280px;
+/* Timer panel */
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
 }
-.ring-outer svg{
-  position:absolute;
-  top:0;left:0;
-  transform:rotate(-90deg);
+.timer-label-tag {
+  background: rgba(0,255,170,0.1);
+  border-radius: 3rem;
+  padding: 0.35rem 1.5rem;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #b3ffe6;
 }
-.ring-track{fill:none;stroke:var(--s2);stroke-width:14}
-.ring-glow{
-  fill:none;
-  stroke:rgba(0,255,170,0.15);
-  stroke-width:22;
-  stroke-linecap:round;
-  transition:stroke-dashoffset 1s linear;
+.ring-wrapper {
+  position: relative;
+  width: 260px;
+  height: 260px;
 }
-.ring-main{
-  fill:none;
-  stroke:url(#ringGrad);
-  stroke-width:14;
-  stroke-linecap:round;
-  transition:stroke-dashoffset 1s linear;
+.ring-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
 }
-.ring-center{
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:2px;
+.ring-bg-track {
+  fill: none;
+  stroke: #1e2a3a;
+  stroke-width: 12;
 }
-.ring-num{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:86px;
-  line-height:1;
-  letter-spacing:0.02em;
-  background:linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.6) 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  font-variant-numeric:tabular-nums;
+.ring-glow-effect {
+  fill: none;
+  stroke: rgba(0,255,170,0.25);
+  stroke-width: 20;
+  stroke-linecap: round;
+  filter: blur(3px);
 }
-.ring-unit-label{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  letter-spacing:0.25em;
-  color:var(--muted2);
-  text-transform:uppercase;
+.ring-active {
+  fill: none;
+  stroke: url(#gradRingColor);
+  stroke-width: 13;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
-
-/* ── SECS ── */
-.secs-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:6px 18px;
-  background:rgba(0,255,170,0.06);
-  border:1px solid rgba(0,255,170,0.15);
-  border-radius:100px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:13px;
-  color:var(--muted2);
+.center-ring {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-.secs-badge b{color:var(--green);font-weight:500}
-
-/* ── STATS ROW ── */
-.stats{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:10px;
-  width:100%;
+.big-number {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 4.8rem;
+  background: linear-gradient(145deg, #ffffff, #b5ffe0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0;
 }
-.stat{
-  background:var(--s1);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:1rem 0.75rem;
-  text-align:center;
-  display:flex;
-  flex-direction:column;
-  gap:4px;
+.unit-ring {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--green-primary);
 }
-.stat-val{
-  font-family:'JetBrains Mono',monospace;
-  font-size:18px;
-  font-weight:500;
-  color:var(--text);
-  font-variant-numeric:tabular-nums;
+.second-pill {
+  background: #0a1020;
+  padding: 0.5rem 1.4rem;
+  border-radius: 3rem;
+  font-family: monospace;
+  border: 1px solid rgba(0,255,170,0.3);
 }
-.stat-key{
-  font-family:'JetBrains Mono',monospace;
-  font-size:9px;
-  letter-spacing:0.15em;
-  color:var(--muted);
-  text-transform:uppercase;
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+  width: 100%;
 }
-
-/* ── PROGRESS BAR ── */
-.prog-wrap{width:100%}
-.prog-track{
-  height:5px;
-  background:var(--s2);
-  border-radius:100px;
-  overflow:hidden;
-  position:relative;
+.stat-item {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 1.2rem;
+  padding: 0.7rem 0.3rem;
+  text-align: center;
+  border: 1px solid rgba(0,255,170,0.2);
 }
-.prog-fill{
-  height:100%;
-  background:linear-gradient(90deg, var(--green) 0%, var(--purple) 100%);
-  border-radius:100px;
-  width:0%;
-  transition:width 1s linear;
-  position:relative;
+.stat-number {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: white;
 }
-.prog-fill::after{
-  content:'';
-  position:absolute;
-  right:0;top:-3px;
-  width:10px;height:10px;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 10px var(--green);
-  transition:opacity 0.3s;
+.stat-caption {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--green-primary);
 }
-.prog-meta{
-  display:flex;
-  justify-content:space-between;
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  color:var(--muted);
-  margin-top:8px;
+.progress-area {
+  width: 100%;
 }
-
-/* ── END TIME ── */
-.end-display{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  color:var(--muted2);
+.progress-bg {
+  background: #121a2a;
+  height: 6px;
+  border-radius: 10px;
+  overflow: hidden;
 }
-.end-display b{color:var(--text)}
-
-/* ── RESET BTN ── */
-.btn-reset{
-  background:transparent;
-  border:1px solid var(--border2);
-  color:var(--muted2);
-  border-radius:10px;
-  padding:0.6rem 2rem;
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  letter-spacing:0.12em;
-  cursor:pointer;
-  transition:all 0.2s;
-  text-transform:uppercase;
+.progress-active {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00ffaa, #bc7eff);
+  border-radius: 10px;
+  transition: width 0.35s ease;
 }
-.btn-reset:hover{border-color:var(--green);color:var(--green);box-shadow:0 0 16px rgba(0,255,170,0.1)}
-
-/* ── DONE ── */
-#panel-done{
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  gap:1.5rem;
-  text-align:center;
-  padding:1rem 0;
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  margin-top: 8px;
+  color: var(--text-silver);
 }
-.done-icon{
-  font-size:72px;
-  animation:pop 0.5s cubic-bezier(0.16,1,0.3,1) both;
+.endtime-block {
+  font-family: monospace;
+  background: #030812;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
 }
-@keyframes pop{from{transform:scale(0) rotate(-30deg)}to{transform:scale(1) rotate(0)}}
-.done-title{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:4rem;
-  letter-spacing:0.06em;
-  background:linear-gradient(135deg, var(--green) 0%, var(--purple) 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(0,255,170,0.6);
+  border-radius: 3rem;
+  padding: 0.7rem 2rem;
+  font-family: monospace;
+  font-weight: 500;
+  color: var(--green-primary);
+  cursor: pointer;
+  transition: 0.2s;
 }
-.done-sub{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  color:var(--muted2);
-  letter-spacing:0.05em;
+.btn-outline:hover {
+  background: rgba(0,255,170,0.12);
+  box-shadow: 0 0 12px rgba(0,255,170,0.2);
 }
-
-/* ── TRANSITIONS ── */
-.panel{transition:opacity 0.4s, transform 0.4s}
-.panel.hidden{opacity:0;pointer-events:none;transform:translateY(10px)}
+.done-screen {
+  text-align: center;
+}
+.done-icon-lg {
+  font-size: 5rem;
+  filter: drop-shadow(0 0 14px #00ffaa);
+  margin-bottom: 0.6rem;
+}
+.done-heading {
+  font-family: 'Inter', sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00ffaa, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
+<canvas id="particle-canvas"></canvas>
 <div class="grid-overlay"></div>
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
-<div class="orb orb3"></div>
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+<div class="glow-orb orb-3"></div>
 
-<div class="wrap">
-
-  <header>
-    <div class="eyebrow">Timer Pro</div>
-    <h1>ĐẾM<br><span class="accent">NGƯỢC</span></h1>
-  </header>
-
-  <!-- SETUP CARD -->
-  <div class="card" id="panel-setup">
-    <div class="tabs">
-      <button class="tab active" onclick="setMode('minutes')">📌 Số phút</button>
-      <button class="tab" onclick="setMode('range')">🕐 Từ giờ → đến giờ</button>
-    </div>
-
-    <div class="fields">
-      <!-- Minutes mode -->
-      <div id="m-minutes">
-        <div class="field">
-          <label>Nhập số phút</label>
-          <input type="number" id="inp-min" placeholder="90" min="1" max="9999">
-        </div>
-        <div class="hint" style="margin-top:8px">Ví dụ: 30, 90, 4750...</div>
-      </div>
-
-      <!-- Range mode -->
-      <div id="m-range" style="display:none">
-        <div class="row">
-          <div class="field">
-            <label>Bắt đầu</label>
-            <input type="time" id="inp-from" value="08:00">
-          </div>
-          <div class="row-arrow">→</div>
-          <div class="field">
-            <label>Kết thúc</label>
-            <input type="time" id="inp-to" value="09:30">
-          </div>
-        </div>
-        <div class="hint" style="margin-top:8px">Tự tính số phút giữa 2 mốc thời gian</div>
-      </div>
-
-      <div class="err" id="err"></div>
-      <button class="btn-start" onclick="go()">▶ &nbsp; Bắt đầu đếm ngược</button>
+<div class="app-container">
+  <div class="header-area">
+    <div class="badge-timer">CHRONOS</div>
+    <div class="main-title">
+      <span class="title-line1">ĐẾM</span>
+      <span class="title-line2">NGƯỢC</span>
     </div>
   </div>
 
-  <!-- TIMER PANEL -->
-  <div id="panel-timer">
-    <div class="card" style="display:flex;flex-direction:column;align-items:center;gap:2rem">
-      <div class="timer-top">
-        <div class="timer-range-label" id="t-label">--</div>
+  <!-- Panel cài đặt -->
+  <div id="setupPanel" class="glass-card">
+    <div class="tab-bar">
+      <button class="tab active" id="minutesTabBtn">📌 SỐ PHÚT</button>
+      <button class="tab" id="rangeTabBtn">⏲️ KHUNG GIỜ</button>
+    </div>
+    <div id="minutesModeDiv">
+      <div class="field-group">
+        <label>⏱️ NHẬP SỐ PHÚT</label>
+        <input type="number" id="minutesInput" class="modern-input" placeholder="Ví dụ: 45" value="30">
       </div>
+      <div class="hint-sm">🔹 Từ 1 đến 9999 phút</div>
+    </div>
+    <div id="rangeModeDiv" style="display: none;">
+      <div class="time-row">
+        <div class="field-group" style="flex:1">
+          <label>BẮT ĐẦU</label>
+          <input type="time" id="fromTime" class="modern-input" value="09:00">
+        </div>
+        <div class="arrow-symbol">→</div>
+        <div class="field-group" style="flex:1">
+          <label>KẾT THÚC</label>
+          <input type="time" id="toTime" class="modern-input" value="10:25">
+        </div>
+      </div>
+      <div class="hint-sm">✨ Tự động tính số phút chênh lệch</div>
+    </div>
+    <div class="error-msg" id="globalError"></div>
+    <button class="btn-primary" id="startCountdownBtn">▶ BẮT ĐẦU</button>
+  </div>
 
-      <!-- Ring -->
-      <div class="ring-outer">
-        <svg viewBox="0 0 280 280" width="280" height="280">
+  <!-- Panel đếm ngược -->
+  <div id="timerPanel" style="display: none;">
+    <div class="glass-card timer-container">
+      <div class="timer-label-tag" id="timerTagLabel">-- phút</div>
+      <div class="ring-wrapper">
+        <svg class="ring-svg" viewBox="0 0 280 280" width="260" height="260">
           <defs>
-            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id="gradRingColor" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#00ffaa"/>
-              <stop offset="100%" stop-color="#8b5cf6"/>
+              <stop offset="100%" stop-color="#b87eff"/>
             </linearGradient>
           </defs>
-          <circle class="ring-track" cx="140" cy="140" r="120"/>
-          <circle class="ring-glow" id="r-glow" cx="140" cy="140" r="120"
-            stroke-dasharray="753.98" stroke-dashoffset="0"/>
-          <circle class="ring-main" id="r-main" cx="140" cy="140" r="120"
-            stroke-dasharray="753.98" stroke-dashoffset="0"/>
+          <circle class="ring-bg-track" cx="140" cy="140" r="120"/>
+          <circle class="ring-glow-effect" id="ringGlowLayer" cx="140" cy="140" r="120" stroke-dasharray="753.98" stroke-dashoffset="0"/>
+          <circle class="ring-active" id="ringProgressMain" cx="140" cy="140" r="120" stroke-dasharray="753.98" stroke-dashoffset="0"/>
         </svg>
-        <div class="ring-center">
-          <div class="ring-num" id="t-mins">00</div>
-          <div class="ring-unit-label">phút</div>
+        <div class="center-ring">
+          <div class="big-number" id="remainingMinutes">00</div>
+          <div class="unit-ring">phút</div>
         </div>
       </div>
-
-      <div class="secs-badge">còn &nbsp;<b id="t-secs">00</b>&nbsp; giây</div>
-
-      <!-- Stats -->
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-val" id="s-pct">0%</div>
-          <div class="stat-key">Đã qua</div>
-        </div>
-        <div class="stat">
-          <div class="stat-val" id="s-rem">--</div>
-          <div class="stat-key">Còn lại</div>
-        </div>
-        <div class="stat">
-          <div class="stat-val" id="s-total">--</div>
-          <div class="stat-key">Tổng cộng</div>
-        </div>
+      <div class="second-pill">⏳ còn <strong id="remainingSecondsText">00</strong> giây</div>
+      <div class="stat-grid">
+        <div class="stat-item"><div class="stat-number" id="percentDone">0%</div><div class="stat-caption">đã qua</div></div>
+        <div class="stat-item"><div class="stat-number" id="remainingFormatted">--</div><div class="stat-caption">còn lại</div></div>
+        <div class="stat-item"><div class="stat-number" id="totalFormatted">--</div><div class="stat-caption">tổng</div></div>
       </div>
-
-      <!-- Progress -->
-      <div class="prog-wrap">
-        <div class="prog-track">
-          <div class="prog-fill" id="prog-fill"></div>
-        </div>
-        <div class="prog-meta">
-          <span id="prog-left">0%</span>
-          <span id="prog-right">--</span>
-        </div>
+      <div class="progress-area">
+        <div class="progress-bg"><div class="progress-active" id="progressFillActive"></div></div>
+        <div class="progress-meta"><span id="progressLeftMeta">0%</span><span id="progressRightMeta">--</span></div>
       </div>
-
-      <div class="end-display">⏰ Kết thúc lúc <b id="t-end">--:--</b></div>
-      <button class="btn-reset" onclick="reset()">↩ &nbsp; Đặt lại</button>
+      <div class="endtime-block">🎯 Kết thúc lúc: <strong id="endTimeHumanRead">--:--:--</strong></div>
+      <button class="btn-outline" id="resetTimerButton">↻ ĐẶT LẠI</button>
     </div>
   </div>
 
-  <!-- DONE -->
-  <div id="panel-done">
-    <div class="card">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;padding:1rem 0">
-        <div class="done-icon">🎉</div>
-        <div class="done-title">XONG RỒI!</div>
-        <div class="done-sub" id="done-sub">Đã hoàn thành.</div>
-        <button class="btn-start" style="max-width:220px" onclick="reset()">↩ &nbsp; Làm lại</button>
-      </div>
+  <!-- Panel hoàn thành -->
+  <div id="donePanel" style="display: none;">
+    <div class="glass-card done-screen">
+      <div class="done-icon-lg">🎉✨🎉</div>
+      <div class="done-heading">HOÀN THÀNH</div>
+      <p style="margin: 1rem 0; font-family: monospace; color: #b7c3e6;" id="completeMessage">Đếm ngược kết thúc xuất sắc</p>
+      <button class="btn-primary" id="doneResetButton" style="max-width: 200px; margin: 0 auto;">LÀM LẠI</button>
     </div>
   </div>
-
 </div>
 
 <script>
-/* ── PARTICLE BG ── */
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let W, H, particles = [];
-function resize(){
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
-
-class Particle{
-  constructor(){this.reset()}
-  reset(){
-    this.x = Math.random()*W;
-    this.y = Math.random()*H;
-    this.r = Math.random()*1.2+0.3;
-    this.dx = (Math.random()-0.5)*0.3;
-    this.dy = (Math.random()-0.5)*0.3;
-    this.alpha = Math.random()*0.4+0.1;
-    this.color = Math.random()>0.5?'0,255,170':'139,92,246';
-  }
-  draw(){
-    ctx.beginPath();
-    ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(${this.color},${this.alpha})`;
-    ctx.fill();
-  }
-  update(){
-    this.x+=this.dx; this.y+=this.dy;
-    if(this.x<0||this.x>W||this.y<0||this.y>H) this.reset();
-  }
-}
-
-for(let i=0;i<120;i++) particles.push(new Particle());
-function animBG(){
-  ctx.clearRect(0,0,W,H);
-  particles.forEach(p=>{p.update();p.draw()});
-  // connect nearby
-  for(let i=0;i<particles.length;i++){
-    for(let j=i+1;j<particles.length;j++){
-      const dx=particles[i].x-particles[j].x;
-      const dy=particles[i].y-particles[j].y;
-      const d=Math.sqrt(dx*dx+dy*dy);
-      if(d<100){
+  (function(){
+    // ---------- Background CANVAS tiên tiến ----------
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particlesList = [];
+    
+    function resizeCanvas(){
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    class ParticleFlow{
+      constructor(){
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.radius = Math.random() * 1.8 + 0.5;
+        this.vx = (Math.random() - 0.5) * 0.2;
+        this.vy = (Math.random() - 0.5) * 0.2;
+        this.alpha = Math.random() * 0.55 + 0.1;
+        this.colorGroup = Math.random() > 0.6 ? '0,255,170' : '139,92,246';
+      }
+      update(){
+        this.x += this.vx;
+        this.y += this.vy;
+        if(this.x < -20) this.x = width + 20;
+        if(this.x > width+20) this.x = -20;
+        if(this.y < -20) this.y = height + 20;
+        if(this.y > height+20) this.y = -20;
+      }
+      draw(){
         ctx.beginPath();
-        ctx.moveTo(particles[i].x,particles[i].y);
-        ctx.lineTo(particles[j].x,particles[j].y);
-        ctx.strokeStyle=`rgba(0,255,170,${0.06*(1-d/100)})`;
-        ctx.lineWidth=0.5;
-        ctx.stroke();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(${this.colorGroup}, ${this.alpha})`;
+        ctx.fill();
       }
     }
-  }
-  requestAnimationFrame(animBG);
-}
-animBG();
-
-/* ── TIMER LOGIC ── */
-let mode='minutes', endTs=null, totalMs=null, ticker=null;
-const CIRCUM=2*Math.PI*120; // 753.98
-
-function setMode(m){
-  mode=m;
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&m==='minutes')||(i===1&&m==='range')));
-  document.getElementById('m-minutes').style.display=m==='minutes'?'':'none';
-  document.getElementById('m-range').style.display=m==='range'?'':'none';
-  document.getElementById('err').textContent='';
-}
-
-function pad(n){return String(Math.floor(n)).padStart(2,'0')}
-function fmtMs(ms){
-  const s=Math.ceil(ms/1000);
-  const m=Math.floor(s/60);
-  const h=Math.floor(m/60);
-  if(h>0) return `${h}g ${m%60}p`;
-  return `${m}p ${s%60}s`;
-}
-
-function go(){
-  const err=document.getElementById('err');
-  err.textContent='';
-  let ms=0, label='';
-
-  if(mode==='minutes'){
-    const v=parseInt(document.getElementById('inp-min').value);
-    if(!v||v<1){err.textContent='⚠ Nhập số phút hợp lệ';return}
-    ms=v*60000;
-    label=`${v} phút`;
-  } else {
-    const fs=document.getElementById('inp-from').value;
-    const ts=document.getElementById('inp-to').value;
-    if(!fs||!ts){err.textContent='⚠ Nhập đầy đủ 2 mốc giờ';return}
-    const [fh,fm]=fs.split(':').map(Number);
-    const [th,tm]=ts.split(':').map(Number);
-    let a=fh*60+fm, b=th*60+tm;
-    if(b<=a) b+=1440;
-    const diff=b-a;
-    if(diff<=0){err.textContent='⚠ Giờ kết thúc phải sau giờ bắt đầu';return}
-    ms=diff*60000;
-    label=`${fs} → ${ts}  (${diff} phút)`;
-  }
-
-  totalMs=ms;
-  endTs=Date.now()+ms;
-
-  document.getElementById('t-label').textContent=label;
-  document.getElementById('s-total').textContent=fmtMs(ms);
-  const ed=new Date(endTs);
-  document.getElementById('t-end').textContent=ed.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-
-  show('timer');
-  tick();
-  ticker=setInterval(tick,500);
-}
-
-function tick(){
-  const rem=endTs-Date.now();
-  if(rem<=0){
-    clearInterval(ticker);
-    const tm=Math.round(totalMs/60000);
-    document.getElementById('done-sub').textContent=`Đã hoàn thành ${tm} phút đếm ngược.`;
-    show('done');
-    return;
-  }
-  const s=Math.ceil(rem/1000);
-  const m=Math.floor(s/60);
-  document.getElementById('t-mins').textContent=pad(m);
-  document.getElementById('t-secs').textContent=pad(s%60);
-
-  const elapsed=totalMs-rem;
-  const pct=Math.max(0,Math.min(1,elapsed/totalMs));
-  const off=(CIRCUM*pct).toFixed(2);
-  document.getElementById('r-main').style.strokeDashoffset=off;
-  document.getElementById('r-glow').style.strokeDashoffset=off;
-
-  const p=(pct*100).toFixed(1);
-  document.getElementById('s-pct').textContent=p+'%';
-  document.getElementById('s-rem').textContent=fmtMs(rem);
-  document.getElementById('prog-fill').style.width=p+'%';
-  document.getElementById('prog-left').textContent=p+'% đã qua';
-  document.getElementById('prog-right').textContent=Math.ceil(rem/1000)+' giây còn lại';
-}
-
-function reset(){
-  clearInterval(ticker);
-  endTs=null;totalMs=null;
-  show('setup');
-}
-
-function show(p){
-  document.getElementById('panel-setup').style.display=p==='setup'?'':'none';
-  document.getElementById('panel-timer').style.display=p==='timer'?'flex':'none';
-  document.getElementById('panel-done').style.display=p==='done'?'flex':'none';
-}
+    for(let i=0;i<140;i++) particlesList.push(new ParticleFlow());
+    
+    function drawConnections(){
+      for(let i=0;i<particlesList.length;i++){
+        for(let j=i+1;j<particlesList.length;j++){
+          const dx = particlesList[i].x - particlesList[j].x;
+          const dy = particlesList[i].y - particlesList[j].y;
+          const dist = Math.hypot(dx, dy);
+          if(dist < 110){
+            ctx.beginPath();
+            ctx.moveTo(particlesList[i].x, particlesList[i].y);
+            ctx.lineTo(particlesList[j].x, particlesList[j].y);
+            ctx.strokeStyle = `rgba(0, 210, 160, ${0.05 * (1 - dist/110)})`;
+            ctx.lineWidth = 0.7;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+    
+    function animateBackground(){
+      ctx.clearRect(0, 0, width, height);
+      for(let p of particlesList) { p.update(); p.draw(); }
+      drawConnections();
+      requestAnimationFrame(animateBackground);
+    }
+    animateBackground();
+    
+    // ---------- LOGIC ĐẾM NGƯỢC ----------
+    let activeMode = 'minutes';
+    let timerInterval = null;
+    let targetEndTime = null;
+    let totalDurationMs = null;
+    const CIRCUM = 753.9822368615503;
+    
+    // DOM
+    const setupDiv = document.getElementById('setupPanel');
+    const timerDiv = document.getElementById('timerPanel');
+    const doneDiv = document.getElementById('donePanel');
+    const minutesModeDiv = document.getElementById('minutesModeDiv');
+    const rangeModeDiv = document.getElementById('rangeModeDiv');
+    const minutesInput = document.getElementById('minutesInput');
+    const fromTime = document.getElementById('fromTime');
+    const toTime = document.getElementById('toTime');
+    const errorSpan = document.getElementById('globalError');
+    const startBtn = document.getElementById('startCountdownBtn');
+    const minutesTab = document.getElementById('minutesTabBtn');
+    const rangeTab = document.getElementById('rangeTabBtn');
+    const resetTimer = document.getElementById('resetTimerButton');
+    const resetDone = document.getElementById('doneResetButton');
+    
+    // Timer display elements
+    const timerTag = document.getElementById('timerTagLabel');
+    const remainingMinsSpan = document.getElementById('remainingMinutes');
+    const remainingSecsSpan = document.getElementById('remainingSecondsText');
+    const percentDoneSpan = document.getElementById('percentDone');
+    const remainingFormattedSpan = document.getElementById('remainingFormatted');
+    const totalFormattedSpan = document.getElementById('totalFormatted');
+    const progressFill = document.getElementById('progressFillActive');
+    const progressLeftMeta = document.getElementById('progressLeftMeta');
+    const progressRightMeta = document.getElementById('progressRightMeta');
+    const endTimeHumanSpan = document.getElementById('endTimeHumanRead');
+    const ringProgress = document.getElementById('ringProgressMain');
+    const ringGlowLayer = document.getElementById('ringGlowLayer');
+    const completeMsgSpan = document.getElementById('completeMessage');
+    
+    function formatTimeSmart(ms){
+      let secTot = Math.floor(ms/1000);
+      let mins = Math.floor(secTot/60);
+      let hours = Math.floor(mins/60);
+      if(hours>0) return `${hours}g ${mins%60}p`;
+      return `${mins}p ${secTot%60}s`;
+    }
+    
+    function stopCountdown(){
+      if(timerInterval){
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+    
+    function resetToSetup(){
+      stopCountdown();
+      targetEndTime = null;
+      totalDurationMs = null;
+      setupDiv.style.display = 'block';
+      timerDiv.style.display = 'none';
+      doneDiv.style.display = 'none';
+      errorSpan.innerText = '';
+    }
+    
+    function updateTimerDisplay(remainingMs){
+      if(!totalDurationMs || remainingMs <= 0) return true;
+      const elapsed = totalDurationMs - remainingMs;
+      let percent = Math.min(1, Math.max(0, elapsed / totalDurationMs));
+      let percentInt = Math.floor(percent * 100);
+      percentDoneSpan.innerText = `${percentInt}%`;
+      remainingFormattedSpan.innerText = formatTimeSmart(remainingMs);
+      const secLeft = Math.ceil(remainingMs/1000);
+      const minsLeft = Math.floor(secLeft / 60);
+      const secs = secLeft % 60;
+      remainingMinsSpan.innerText = minsLeft.toString().padStart(2,'0');
+      remainingSecsSpan.innerText = secs.toString().padStart(2,'0');
+      progressFill.style.width = `${percentInt}%`;
+      progressLeftMeta.innerText = `${percentInt}% đã qua`;
+      progressRightMeta.innerText = `${secLeft} giây còn lại`;
+      const offset = CIRCUM * percent;
+      ringProgress.style.strokeDashoffset = offset;
+      ringGlowLayer.style.strokeDashoffset = offset;
+      return false;
+    }
+    
+    function startTicking(){
+      if(!targetEndTime || !totalDurationMs) return;
+      function tick(){
+        const now = Date.now();
+        let remaining = targetEndTime - now;
+        if(remaining <= 0){
+          stopCountdown();
+          const totalMins = Math.round(totalDurationMs / 60000);
+          completeMsgSpan.innerText = `✅ Hoàn thành ${totalMins} phút đếm ngược.`;
+          timerDiv.style.display = 'none';
+          doneDiv.style.display = 'flex';
+          return;
+        }
+        updateTimerDisplay(remaining);
+      }
+      tick();
+      timerInterval = setInterval(tick, 360);
+    }
+    
+    function startCountdown(totalMs, labelDesc, endDateObj){
+      if(totalMs <= 0){
+        errorSpan.innerText = 'Thời gian không hợp lệ';
+        return false;
+      }
+      stopCountdown();
+      totalDurationMs = totalMs;
+      targetEndTime = Date.now() + totalMs;
+      timerTag.innerText = labelDesc;
+      totalFormattedSpan.innerText = formatTimeSmart(totalMs);
+      endTimeHumanSpan.innerText = endDateObj.toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+      setupDiv.style.display = 'none';
+      timerDiv.style.display = 'flex';
+      doneDiv.style.display = 'none';
+      startTicking();
+      return true;
+    }
+    
+    function onStart(){
+      errorSpan.innerText = '';
+      if(activeMode === 'minutes'){
+        let minsVal = parseInt(minutesInput.value);
+        if(isNaN(minsVal) || minsVal < 1){
+          errorSpan.innerText = '⚠️ Nhập số phút hợp lệ (>=1)';
+          return;
+        }
+        if(minsVal > 9999){
+          errorSpan.innerText = '⚠️ Số phút tối đa 9999';
+          return;
+        }
+        const duration = minsVal * 60000;
+        const endDate = new Date(Date.now() + duration);
+        startCountdown(duration, `${minsVal} phút`, endDate);
+      } else {
+        let fromVal = fromTime.value;
+        let toVal = toTime.value;
+        if(!fromVal || !toVal){
+          errorSpan.innerText = 'Chọn đủ thời gian bắt đầu & kết thúc';
+          return;
+        }
+        let [fh, fm] = fromVal.split(':').map(Number);
+        let [th, tm] = toVal.split(':').map(Number);
+        let fromMins = fh*60+fm;
+        let toMins = th*60+tm;
+        if(toMins <= fromMins) toMins += 1440;
+        let diffMins = toMins - fromMins;
+        if(diffMins <= 0 || diffMins > 2880){
+          errorSpan.innerText = '⚠️ Khoảng thời gian không hợp lệ (tối đa 48h)';
+          return;
+        }
+        const duration = diffMins * 60000;
+        const endDate = new Date(Date.now() + duration);
+        startCountdown(duration, `${fromVal} → ${toVal} (${diffMins} phút)`, endDate);
+      }
+    }
+    
+    function setUIMode(mode){
+      activeMode = mode;
+      if(mode === 'minutes'){
+        minutesModeDiv.style.display = 'block';
+        rangeModeDiv.style.display = 'none';
+        minutesTab.classList.add('active');
+        rangeTab.classList.remove('active');
+      } else {
+        minutesModeDiv.style.display = 'none';
+        rangeModeDiv.style.display = 'block';
+        rangeTab.classList.add('active');
+        minutesTab.classList.remove('active');
+      }
+      errorSpan.innerText = '';
+    }
+    
+    minutesTab.addEventListener('click', () => setUIMode('minutes'));
+    rangeTab.addEventListener('click', () => setUIMode('range'));
+    startBtn.addEventListener('click', onStart);
+    resetTimer.addEventListener('click', resetToSetup);
+    resetDone.addEventListener('click', resetToSetup);
+    
+    setUIMode('minutes');
+    minutesInput.value = "35";
+    fromTime.value = "13:30";
+    toTime.value = "14:50";
+  })();
 </script>
 </body>
 </html>
