@@ -1,372 +1,769 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Đếm Ngược Nghỉ Lễ 30/4 - 1/5</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none; /* Tránh bôi đen khi nhấn giữ */
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COUNTDOWN</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(145deg, #0a2f3a 0%, #0a1f2a 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', 'Roboto', 'Poppins', system-ui, -apple-system, 'Be Vietnam Pro', sans-serif;
-            padding: 1rem;
-        }
+:root{
+  --bg:#060608;
+  --s1:#0d0d14;
+  --s2:#13131e;
+  --border:#1e1e2e;
+  --border2:#2a2a40;
+  --green:#00ffaa;
+  --green2:#00cc88;
+  --purple:#8b5cf6;
+  --pink:#f472b6;
+  --text:#e8e8f0;
+  --muted:#484868;
+  --muted2:#6b6b88;
+  --white:#ffffff;
+}
 
-        /* Container chính với hiệu ứng kính và bóng đổ */
-        .countdown-card {
-            max-width: 750px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 3.5rem;
-            padding: 2rem 1.8rem 2.5rem 1.8rem;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.15);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Space Grotesk',sans-serif;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  position:relative;
+}
 
-        /* Tiêu đề chính */
-        .holiday-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #FFD966, #FFB347);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+/* ── CANVAS BG ── */
+#bg-canvas{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  opacity:0.6;
+}
 
-        .sub {
-            color: #c0e0ff;
-            font-size: 1rem;
-            font-weight: 500;
-            background: rgba(0, 0, 0, 0.4);
-            display: inline-block;
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-            backdrop-filter: blur(4px);
-            margin-bottom: 2rem;
-        }
+/* ── GRID OVERLAY ── */
+.grid-overlay{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size:60px 60px;
+  opacity:0.15;
+  pointer-events:none;
+}
 
-        /* Bộ đếm chính: hiển thị các khối */
-        .timer-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1.2rem;
-            margin-bottom: 2rem;
-        }
+/* ── GLOW ORBS ── */
+.orb{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(120px);
+  opacity:0.15;
+  pointer-events:none;
+  z-index:1;
+  animation:orb-drift 12s ease-in-out infinite alternate;
+}
+.orb1{width:700px;height:700px;background:var(--purple);top:-200px;right:-200px;animation-duration:14s}
+.orb2{width:600px;height:600px;background:var(--green);bottom:-200px;left:-200px;animation-duration:11s}
+.orb3{width:400px;height:400px;background:var(--pink);top:40%;left:40%;transform:translate(-50%,-50%);animation-duration:9s;opacity:0.07}
+@keyframes orb-drift{
+  0%{transform:translate(0,0) scale(1)}
+  100%{transform:translate(40px,30px) scale(1.08)}
+}
 
-        .time-card {
-            background: rgba(10, 25, 35, 0.7);
-            backdrop-filter: blur(4px);
-            border-radius: 2rem;
-            padding: 1rem 0.8rem;
-            min-width: 110px;
-            flex: 1 0 auto;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            border-bottom: 3px solid #FFB347;
-            transition: transform 0.2s;
-        }
+/* ── MAIN WRAP ── */
+.wrap{
+  position:relative;
+  z-index:10;
+  width:100%;
+  max-width:580px;
+  padding:2rem 1.5rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0;
+}
 
-        .time-card:hover {
-            transform: translateY(-5px);
-        }
+/* ── HEADER ── */
+header{
+  text-align:center;
+  margin-bottom:2.5rem;
+}
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.3em;
+  color:var(--green);
+  text-transform:uppercase;
+  margin-bottom:1rem;
+  padding:6px 16px;
+  border:1px solid rgba(0,255,170,0.2);
+  border-radius:100px;
+  background:rgba(0,255,170,0.04);
+}
+.eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse-dot 1.5s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.6)}}
 
-        .time-number {
-            font-size: 3.8rem;
-            font-weight: 800;
-            font-family: 'Monaco', 'Courier New', monospace;
-            background: linear-gradient(145deg, #FFE6C7, #FFC48A);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            line-height: 1.2;
-            letter-spacing: 2px;
-        }
+h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,14vw,7rem);
+  line-height:0.9;
+  letter-spacing:0.04em;
+  background:linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.4) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+h1 .accent{
+  background:linear-gradient(135deg, var(--green) 0%, var(--purple) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
 
-        .time-label {
-            font-size: 1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #FFD966;
-            margin-top: 0.4rem;
-        }
+/* ── CARD ── */
+.card{
+  width:100%;
+  background:rgba(13,13,20,0.8);
+  border:1px solid var(--border2);
+  border-radius:24px;
+  padding:2rem;
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  box-shadow:0 0 0 1px rgba(255,255,255,0.03), 0 32px 80px rgba(0,0,0,0.6);
+  transition:all 0.5s cubic-bezier(0.16,1,0.3,1);
+}
 
-        /* Thông báo đặc biệt và nút */
-        .message-area {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 2rem;
-            padding: 1rem;
-            margin-top: 1rem;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-            color: #FADB67;
-            font-size: 1.1rem;
-            backdrop-filter: blur(5px);
-        }
+/* ── TABS ── */
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  background:var(--bg);
+  border-radius:14px;
+  padding:4px;
+  border:1px solid var(--border);
+  margin-bottom:1.75rem;
+}
+.tab{
+  padding:0.65rem 1rem;
+  border:1px solid transparent;
+  border-radius:10px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  background:transparent;
+  color:var(--muted2);
+  transition:all 0.25s;
+  letter-spacing:0.02em;
+}
+.tab.active{
+  background:var(--s2);
+  color:var(--text);
+  border-color:var(--border2);
+  box-shadow:0 2px 12px rgba(0,0,0,0.3);
+}
 
-        .btn-reset {
-            background: #FFB347;
-            border: none;
-            color: #1e2a32;
-            font-weight: bold;
-            font-size: 1rem;
-            padding: 0.7rem 1.6rem;
-            border-radius: 2.5rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: inherit;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+/* ── INPUTS ── */
+.fields{display:flex;flex-direction:column;gap:1rem}
+.field{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end}
+.row-arrow{
+  display:flex;align-items:center;justify-content:center;
+  padding-bottom:14px;
+  color:var(--muted);font-size:18px;
+}
 
-        .btn-reset:hover {
-            background: #FFA01E;
-            transform: scale(1.02);
-            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
-        }
+label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.2em;
+  color:var(--muted2);
+  text-transform:uppercase;
+}
 
-        .btn-reset:active {
-            transform: scale(0.98);
-        }
+input[type=number],input[type=time]{
+  background:var(--bg);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  padding:0.85rem 1rem;
+  color:var(--text);
+  font-family:'JetBrains Mono',monospace;
+  font-size:22px;
+  font-weight:500;
+  width:100%;
+  outline:none;
+  transition:all 0.2s;
+  text-align:center;
+  -moz-appearance:textfield;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(0,255,170,0.08);
+  background:rgba(0,255,170,0.02);
+}
 
-        .note-time {
-            font-size: 0.8rem;
-            margin-top: 1.8rem;
-            color: #9bb7d4;
-            background: rgba(0,0,0,0.2);
-            padding: 0.4rem;
-            border-radius: 2rem;
-            display: inline-block;
-            width: auto;
-        }
+.hint{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--muted);
+  text-align:center;
+  letter-spacing:0.05em;
+}
 
-        /* Responsive cho mobile */
-        @media (max-width: 550px) {
-            .countdown-card {
-                padding: 1.5rem 1rem;
-            }
-            .time-card {
-                min-width: 75px;
-                padding: 0.6rem 0.3rem;
-            }
-            .time-number {
-                font-size: 2.2rem;
-            }
-            .time-label {
-                font-size: 0.7rem;
-            }
-            .holiday-title {
-                font-size: 1.7rem;
-            }
-        }
+.err{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:#ff4466;
+  text-align:center;
+  min-height:16px;
+  letter-spacing:0.05em;
+}
 
-        @media (max-width: 400px) {
-            .timer-grid {
-                gap: 0.6rem;
-            }
-            .time-number {
-                font-size: 1.9rem;
-            }
-        }
+/* ── START BUTTON ── */
+.btn-start{
+  width:100%;
+  margin-top:0.25rem;
+  padding:1.1rem 2rem;
+  background:linear-gradient(135deg, var(--green) 0%, #00cc88 100%);
+  color:#000;
+  border:none;
+  border-radius:14px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  transition:all 0.25s;
+}
+.btn-start::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+  opacity:0;
+  transition:opacity 0.25s;
+}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,255,170,0.25)}
+.btn-start:hover::before{opacity:1}
+.btn-start:active{transform:translateY(0)}
 
-        footer {
-            font-size: 0.7rem;
-            margin-top: 20px;
-            opacity: 0.7;
-        }
-    </style>
+/* ── TIMER PANEL ── */
+#panel-timer{display:none;flex-direction:column;align-items:center;gap:2rem;width:100%}
+
+.timer-top{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+}
+.timer-range-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.15em;
+  color:var(--green);
+  text-transform:uppercase;
+}
+
+/* ── BIG RING ── */
+.ring-outer{
+  position:relative;
+  width:280px;
+  height:280px;
+}
+.ring-outer svg{
+  position:absolute;
+  top:0;left:0;
+  transform:rotate(-90deg);
+}
+.ring-track{fill:none;stroke:var(--s2);stroke-width:14}
+.ring-glow{
+  fill:none;
+  stroke:rgba(0,255,170,0.15);
+  stroke-width:22;
+  stroke-linecap:round;
+  transition:stroke-dashoffset 1s linear;
+}
+.ring-main{
+  fill:none;
+  stroke:url(#ringGrad);
+  stroke-width:14;
+  stroke-linecap:round;
+  transition:stroke-dashoffset 1s linear;
+}
+.ring-center{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+}
+.ring-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:86px;
+  line-height:1;
+  letter-spacing:0.02em;
+  background:linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.6) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  font-variant-numeric:tabular-nums;
+}
+.ring-unit-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.25em;
+  color:var(--muted2);
+  text-transform:uppercase;
+}
+
+/* ── SECS ── */
+.secs-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 18px;
+  background:rgba(0,255,170,0.06);
+  border:1px solid rgba(0,255,170,0.15);
+  border-radius:100px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  color:var(--muted2);
+}
+.secs-badge b{color:var(--green);font-weight:500}
+
+/* ── STATS ROW ── */
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  width:100%;
+}
+.stat{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:1rem 0.75rem;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.stat-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:18px;
+  font-weight:500;
+  color:var(--text);
+  font-variant-numeric:tabular-nums;
+}
+.stat-key{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:0.15em;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+
+/* ── PROGRESS BAR ── */
+.prog-wrap{width:100%}
+.prog-track{
+  height:5px;
+  background:var(--s2);
+  border-radius:100px;
+  overflow:hidden;
+  position:relative;
+}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg, var(--green) 0%, var(--purple) 100%);
+  border-radius:100px;
+  width:0%;
+  transition:width 1s linear;
+  position:relative;
+}
+.prog-fill::after{
+  content:'';
+  position:absolute;
+  right:0;top:-3px;
+  width:10px;height:10px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 10px var(--green);
+  transition:opacity 0.3s;
+}
+.prog-meta{
+  display:flex;
+  justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--muted);
+  margin-top:8px;
+}
+
+/* ── END TIME ── */
+.end-display{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--muted2);
+}
+.end-display b{color:var(--text)}
+
+/* ── RESET BTN ── */
+.btn-reset{
+  background:transparent;
+  border:1px solid var(--border2);
+  color:var(--muted2);
+  border-radius:10px;
+  padding:0.6rem 2rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.12em;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-transform:uppercase;
+}
+.btn-reset:hover{border-color:var(--green);color:var(--green);box-shadow:0 0 16px rgba(0,255,170,0.1)}
+
+/* ── DONE ── */
+#panel-done{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  gap:1.5rem;
+  text-align:center;
+  padding:1rem 0;
+}
+.done-icon{
+  font-size:72px;
+  animation:pop 0.5s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes pop{from{transform:scale(0) rotate(-30deg)}to{transform:scale(1) rotate(0)}}
+.done-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:4rem;
+  letter-spacing:0.06em;
+  background:linear-gradient(135deg, var(--green) 0%, var(--purple) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.done-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--muted2);
+  letter-spacing:0.05em;
+}
+
+/* ── TRANSITIONS ── */
+.panel{transition:opacity 0.4s, transform 0.4s}
+.panel.hidden{opacity:0;pointer-events:none;transform:translateY(10px)}
+</style>
 </head>
 <body>
 
-<div class="countdown-card">
-    <div class="holiday-title">🎉 KỲ NGHỈ LỄ 30/4 - 1/5 🎉</div>
-    <div class="sub">🇻🇳 Giải phóng miền Nam - Quốc tế Lao động 🇻🇳</div>
+<canvas id="bg-canvas"></canvas>
+<div class="grid-overlay"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
 
-    <!-- Bảng đồng hồ đếm ngược -->
-    <div class="timer-grid">
-        <div class="time-card">
-            <div class="time-number" id="days">00</div>
-            <div class="time-label">NGÀY</div>
-        </div>
-        <div class="time-card">
-            <div class="time-number" id="hours">00</div>
-            <div class="time-label">GIỜ</div>
-        </div>
-        <div class="time-card">
-            <div class="time-number" id="minutes">00</div>
-            <div class="time-label">PHÚT</div>
-        </div>
-        <div class="time-card">
-            <div class="time-number" id="seconds">00</div>
-            <div class="time-label">GIÂY</div>
-        </div>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Timer Pro</div>
+    <h1>ĐẾM<br><span class="accent">NGƯỢC</span></h1>
+  </header>
+
+  <!-- SETUP CARD -->
+  <div class="card" id="panel-setup">
+    <div class="tabs">
+      <button class="tab active" onclick="setMode('minutes')">📌 Số phút</button>
+      <button class="tab" onclick="setMode('range')">🕐 Từ giờ → đến giờ</button>
     </div>
 
-    <!-- Khu vực thông báo trạng thái (đã đến giờ nghỉ / chúc mừng) -->
-    <div class="message-area" id="statusMessage">
-        🕒 Đếm ngược đến 18:00 ngày 29/4/2026
-    </div>
+    <div class="fields">
+      <!-- Minutes mode -->
+      <div id="m-minutes">
+        <div class="field">
+          <label>Nhập số phút</label>
+          <input type="number" id="inp-min" placeholder="90" min="1" max="9999">
+        </div>
+        <div class="hint" style="margin-top:8px">Ví dụ: 30, 90, 4750...</div>
+      </div>
 
-    <!-- Nút làm mới / đồng bộ thời gian ( tính lại dựa trên thời gian thực) -->
-    <button class="btn-reset" id="refreshBtn">⟳ Cập nhật thời gian hiện tại</button>
-    
-    <div class="note-time">
-        📍 Mốc thời gian: <strong>18:00 ngày 29 tháng 4 năm 2026</strong><br>
-        (Bắt đầu kỳ nghỉ lễ 30/4 & 1/5)
+      <!-- Range mode -->
+      <div id="m-range" style="display:none">
+        <div class="row">
+          <div class="field">
+            <label>Bắt đầu</label>
+            <input type="time" id="inp-from" value="08:00">
+          </div>
+          <div class="row-arrow">→</div>
+          <div class="field">
+            <label>Kết thúc</label>
+            <input type="time" id="inp-to" value="09:30">
+          </div>
+        </div>
+        <div class="hint" style="margin-top:8px">Tự tính số phút giữa 2 mốc thời gian</div>
+      </div>
+
+      <div class="err" id="err"></div>
+      <button class="btn-start" onclick="go()">▶ &nbsp; Bắt đầu đếm ngược</button>
     </div>
-    <footer>⏱️ Đồng hồ tính đến 18h hôm nay (theo giờ thiết bị của bạn)</footer>
+  </div>
+
+  <!-- TIMER PANEL -->
+  <div id="panel-timer">
+    <div class="card" style="display:flex;flex-direction:column;align-items:center;gap:2rem">
+      <div class="timer-top">
+        <div class="timer-range-label" id="t-label">--</div>
+      </div>
+
+      <!-- Ring -->
+      <div class="ring-outer">
+        <svg viewBox="0 0 280 280" width="280" height="280">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00ffaa"/>
+              <stop offset="100%" stop-color="#8b5cf6"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-track" cx="140" cy="140" r="120"/>
+          <circle class="ring-glow" id="r-glow" cx="140" cy="140" r="120"
+            stroke-dasharray="753.98" stroke-dashoffset="0"/>
+          <circle class="ring-main" id="r-main" cx="140" cy="140" r="120"
+            stroke-dasharray="753.98" stroke-dashoffset="0"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-num" id="t-mins">00</div>
+          <div class="ring-unit-label">phút</div>
+        </div>
+      </div>
+
+      <div class="secs-badge">còn &nbsp;<b id="t-secs">00</b>&nbsp; giây</div>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-val" id="s-pct">0%</div>
+          <div class="stat-key">Đã qua</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="s-rem">--</div>
+          <div class="stat-key">Còn lại</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="s-total">--</div>
+          <div class="stat-key">Tổng cộng</div>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="prog-wrap">
+        <div class="prog-track">
+          <div class="prog-fill" id="prog-fill"></div>
+        </div>
+        <div class="prog-meta">
+          <span id="prog-left">0%</span>
+          <span id="prog-right">--</span>
+        </div>
+      </div>
+
+      <div class="end-display">⏰ Kết thúc lúc <b id="t-end">--:--</b></div>
+      <button class="btn-reset" onclick="reset()">↩ &nbsp; Đặt lại</button>
+    </div>
+  </div>
+
+  <!-- DONE -->
+  <div id="panel-done">
+    <div class="card">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;padding:1rem 0">
+        <div class="done-icon">🎉</div>
+        <div class="done-title">XONG RỒI!</div>
+        <div class="done-sub" id="done-sub">Đã hoàn thành.</div>
+        <button class="btn-start" style="max-width:220px" onclick="reset()">↩ &nbsp; Làm lại</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-    (function() {
-        // ------------------------------------------------
-        // MỐC THỜI GIAN ĐÍCH: 18:00 ngày 30/4/2026
-        // Lưu ý: tháng trong Javascript (0-11) => Tháng 4 là index 3
-        // Ngày 30 tháng 4 năm 2026, 18 giờ 00 phút 00 giây
-        // ------------------------------------------------
-        const TARGET_YEAR = 2026;
-        const TARGET_MONTH = 3;      // Tháng 4 (0=Jan)
-        const TARGET_DAY = 29;
-        const TARGET_HOUR = 18;
-        const TARGET_MINUTE = 0;
-        const TARGET_SECOND = 0;
-        
-        // DOM elements
-        const daysSpan = document.getElementById('days');
-        const hoursSpan = document.getElementById('hours');
-        const minutesSpan = document.getElementById('minutes');
-        const secondsSpan = document.getElementById('seconds');
-        const messageDiv = document.getElementById('statusMessage');
-        
-        // Hàm tạo đối tượng Date của mốc đích (dựa trên múi giờ local của thiết bị)
-        // Điều quan trọng: người dùng muốn đếm đến 18h ngày 30/4 theo MÚI GIỜ CỦA HỌ.
-        // Sử dụng setHours để đảm bảo giờ cục bộ.
-        function getTargetDate() {
-            // Tạo ngày tại địa phương (year, month, day, hour, minute, second)
-            // Lưu ý: new Date(year, month, day, hour, minute, second) dùng giờ local
-            return new Date(TARGET_YEAR, TARGET_MONTH, TARGET_DAY, TARGET_HOUR, TARGET_MINUTE, TARGET_SECOND);
-        }
-        
-        // Hàm định dạng số (luôn 2 chữ số)
-        function formatNumber(num) {
-            return num < 10 ? '0' + num : '' + num;
-        }
-        
-        // Hàm cập nhật đồng hồ dựa trên thời gian hiện tại
-        function updateCountdown() {
-            const now = new Date();                 // Thời điểm hiện tại (local)
-            const target = getTargetDate();         // Mốc 30/4/2026 18:00 local
-            
-            // Tính chênh lệch (milliseconds)
-            let diff = target.getTime() - now.getTime();
-            
-            // Kiểm tra nếu đã qua mốc nghỉ lễ
-            if (diff <= 0) {
-                // Đã đến hoặc qua thời gian nghỉ
-                daysSpan.innerText = '00';
-                hoursSpan.innerText = '00';
-                minutesSpan.innerText = '00';
-                secondsSpan.innerText = '00';
-                messageDiv.innerHTML = '🎉🎊 CHÚC MỪNG! BẮT ĐẦU KỲ NGHỈ LỄ 30/4 - 1/5 🎊🎉 <br> 🇻🇳 Vui vẻ, an toàn, hạnh phúc! 🇻🇳';
-                return;
-            }
-            
-            // Tính các đơn vị thời gian
-            const totalSeconds = Math.floor(diff / 1000);
-            const days = Math.floor(totalSeconds / 86400);
-            const hours = Math.floor((totalSeconds % 86400) / 3600);
-            const minutes = Math.floor((totalSeconds % 3600) / 60);
-            const seconds = totalSeconds % 60;
-            
-            // Hiển thị lên giao diện
-            daysSpan.innerText = formatNumber(days);
-            hoursSpan.innerText = formatNumber(hours);
-            minutesSpan.innerText = formatNumber(minutes);
-            secondsSpan.innerText = formatNumber(seconds);
-            
-            // Tạo thông báo thêm phần hấp dẫn, nếu còn dưới 3 ngày có thể thông báo đặc biệt
-            let extraMsg = '';
-            if (days === 0 && hours <= 6 && hours >= 0) {
-                extraMsg = ' ⏰ Sắp đến giờ nghỉ rồi!!! Chuẩn bị xách balo lên thôi! 🧳';
-            } else if (days === 0 && hours < 1 && minutes < 60) {
-                extraMsg = ' 🔥 Cận kề giờ nghỉ, nóng lòng quá! 🔥';
-            } else if (days < 3) {
-                extraMsg = ` ✨ Chỉ còn ${days} ngày nữa là tận hưởng kỳ nghỉ dài ✨`;
-            } else {
-                extraMsg = ' 🕒 Hãy cùng đếm ngược đến khoảnh khắc nghỉ lễ nào!';
-            }
-            
-            messageDiv.innerHTML = `⏳ Còn chính xác: ${days} ngày, ${hours} giờ, ${minutes} phút, ${seconds} giây nữa là đến 18:00 ngày 30/4/2026. ${extraMsg}`;
-        }
-        
-        // Hàm đồng bộ và hiển thị ngay thời gian thực, có thể dùng nút refresh để cập nhật ngay (dù setInterval vẫn chạy)
-        function syncTimer() {
-            updateCountdown();
-            // thêm hiệu ứng phản hồi ngắn (tuỳ chọn)
-            const btn = document.getElementById('refreshBtn');
-            if (btn) {
-                btn.style.transform = 'scale(0.97)';
-                setTimeout(() => { if(btn) btn.style.transform = ''; }, 150);
-            }
-        }
-        
-        // Thiết lập interval cập nhật mỗi giây
-        let intervalId = setInterval(updateCountdown, 1000);
-        
-        // Xử lý nút refresh: dừng interval cũ (tránh trùng) và khởi tạo lại, đồng thời cập nhật ngay
-        const refreshBtn = document.getElementById('refreshBtn');
-        if (refreshBtn) {
-            refreshBtn.addEventListener('click', () => {
-                // Xóa interval cũ, tạo lại mới để tránh có thể có độ trễ dồn (nhưng thực chất không cần thiết, chỉ reset lại an toàn)
-                if (intervalId) clearInterval(intervalId);
-                // Cập nhật đồng hồ ngay lập tức
-                updateCountdown();
-                // Tạo interval mới
-                intervalId = setInterval(updateCountdown, 1000);
-                // Hiển thị thông báo tạm thời (tùy chọn, không làm rối)
-                const originalMsg = messageDiv.innerHTML;
-                messageDiv.style.transition = '0.2s';
-                messageDiv.style.backgroundColor = 'rgba(255,180,70,0.3)';
-                setTimeout(() => {
-                    if (messageDiv) messageDiv.style.backgroundColor = '';
-                }, 300);
-            });
-        }
-        
-        // Đảm bảo mọi thứ được khởi tạo đúng lúc
-        updateCountdown();
-        
-        // Xử lý khi tab ẩn, vẫn chạy tốt, nhưng có thể giảm tải? Không sao.
-        // Thêm kiểm tra nếu có lỗi timezone không ảnh hưởng vì chúng ta xây dựng mốc hoàn toàn dựa trên local.
-        // Tuỳ chọn: mỗi khi đồng hồ chạy, nếu diff bị NaN thì khôi phục (fallback hiếm khi)
-        window.addEventListener('load', () => {
-            updateCountdown();
-        });
-        
-        // Xử lý trường hợp máy tính thay đổi thời gian hệ thống trong lúc chạy: setInterval vẫn cập nhật mỗi giây
-        // nên sẽ tự động bắt kịp. Không cần làm thêm.
-        
-        // Bonus: Xuất ra console để debug mốc thời gian đang đếm
-        console.log('Mốc đếm ngược:', getTargetDate().toString());
-        console.log('Thời gian hiện tại (local):', new Date().toString());
-    })();
+/* ── PARTICLE BG ── */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resize(){
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle{
+  constructor(){this.reset()}
+  reset(){
+    this.x = Math.random()*W;
+    this.y = Math.random()*H;
+    this.r = Math.random()*1.2+0.3;
+    this.dx = (Math.random()-0.5)*0.3;
+    this.dy = (Math.random()-0.5)*0.3;
+    this.alpha = Math.random()*0.4+0.1;
+    this.color = Math.random()>0.5?'0,255,170':'139,92,246';
+  }
+  draw(){
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${this.color},${this.alpha})`;
+    ctx.fill();
+  }
+  update(){
+    this.x+=this.dx; this.y+=this.dy;
+    if(this.x<0||this.x>W||this.y<0||this.y>H) this.reset();
+  }
+}
+
+for(let i=0;i<120;i++) particles.push(new Particle());
+function animBG(){
+  ctx.clearRect(0,0,W,H);
+  particles.forEach(p=>{p.update();p.draw()});
+  // connect nearby
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x;
+      const dy=particles[i].y-particles[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<100){
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`rgba(0,255,170,${0.06*(1-d/100)})`;
+        ctx.lineWidth=0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(animBG);
+}
+animBG();
+
+/* ── TIMER LOGIC ── */
+let mode='minutes', endTs=null, totalMs=null, ticker=null;
+const CIRCUM=2*Math.PI*120; // 753.98
+
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&m==='minutes')||(i===1&&m==='range')));
+  document.getElementById('m-minutes').style.display=m==='minutes'?'':'none';
+  document.getElementById('m-range').style.display=m==='range'?'':'none';
+  document.getElementById('err').textContent='';
+}
+
+function pad(n){return String(Math.floor(n)).padStart(2,'0')}
+function fmtMs(ms){
+  const s=Math.ceil(ms/1000);
+  const m=Math.floor(s/60);
+  const h=Math.floor(m/60);
+  if(h>0) return `${h}g ${m%60}p`;
+  return `${m}p ${s%60}s`;
+}
+
+function go(){
+  const err=document.getElementById('err');
+  err.textContent='';
+  let ms=0, label='';
+
+  if(mode==='minutes'){
+    const v=parseInt(document.getElementById('inp-min').value);
+    if(!v||v<1){err.textContent='⚠ Nhập số phút hợp lệ';return}
+    ms=v*60000;
+    label=`${v} phút`;
+  } else {
+    const fs=document.getElementById('inp-from').value;
+    const ts=document.getElementById('inp-to').value;
+    if(!fs||!ts){err.textContent='⚠ Nhập đầy đủ 2 mốc giờ';return}
+    const [fh,fm]=fs.split(':').map(Number);
+    const [th,tm]=ts.split(':').map(Number);
+    let a=fh*60+fm, b=th*60+tm;
+    if(b<=a) b+=1440;
+    const diff=b-a;
+    if(diff<=0){err.textContent='⚠ Giờ kết thúc phải sau giờ bắt đầu';return}
+    ms=diff*60000;
+    label=`${fs} → ${ts}  (${diff} phút)`;
+  }
+
+  totalMs=ms;
+  endTs=Date.now()+ms;
+
+  document.getElementById('t-label').textContent=label;
+  document.getElementById('s-total').textContent=fmtMs(ms);
+  const ed=new Date(endTs);
+  document.getElementById('t-end').textContent=ed.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+  show('timer');
+  tick();
+  ticker=setInterval(tick,500);
+}
+
+function tick(){
+  const rem=endTs-Date.now();
+  if(rem<=0){
+    clearInterval(ticker);
+    const tm=Math.round(totalMs/60000);
+    document.getElementById('done-sub').textContent=`Đã hoàn thành ${tm} phút đếm ngược.`;
+    show('done');
+    return;
+  }
+  const s=Math.ceil(rem/1000);
+  const m=Math.floor(s/60);
+  document.getElementById('t-mins').textContent=pad(m);
+  document.getElementById('t-secs').textContent=pad(s%60);
+
+  const elapsed=totalMs-rem;
+  const pct=Math.max(0,Math.min(1,elapsed/totalMs));
+  const off=(CIRCUM*pct).toFixed(2);
+  document.getElementById('r-main').style.strokeDashoffset=off;
+  document.getElementById('r-glow').style.strokeDashoffset=off;
+
+  const p=(pct*100).toFixed(1);
+  document.getElementById('s-pct').textContent=p+'%';
+  document.getElementById('s-rem').textContent=fmtMs(rem);
+  document.getElementById('prog-fill').style.width=p+'%';
+  document.getElementById('prog-left').textContent=p+'% đã qua';
+  document.getElementById('prog-right').textContent=Math.ceil(rem/1000)+' giây còn lại';
+}
+
+function reset(){
+  clearInterval(ticker);
+  endTs=null;totalMs=null;
+  show('setup');
+}
+
+function show(p){
+  document.getElementById('panel-setup').style.display=p==='setup'?'':'none';
+  document.getElementById('panel-timer').style.display=p==='timer'?'flex':'none';
+  document.getElementById('panel-done').style.display=p==='done'?'flex':'none';
+}
 </script>
 </body>
 </html>
