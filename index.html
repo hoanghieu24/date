@@ -2,319 +2,329 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>ĐẾM NGƯỢC | Đồng Hồ Cao Cấp</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>MORPH | Đồng Hồ Đếm Ngược Đương Đại</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
 <style>
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-:root {
-  --bg-dark: #020308;
-  --card-bg: rgba(8, 12, 22, 0.75);
-  --border-glow: rgba(0, 255, 170, 0.3);
-  --green-primary: #00ffaa;
-  --green-primary-dark: #00cc88;
-  --purple-grad: #a855f7;
-  --pink-accent: #f472b6;
-  --text-white: #ffffff;
-  --text-silver: #cdd9ff;
-  --text-muted: #6c7a9e;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  background: var(--bg-dark);
-  font-family: 'Inter', 'Space Grotesk', sans-serif;
+  background: #0a0a0f;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   overflow-x: hidden;
-  position: relative;
 }
 
-/* 背景粒子 Canvas */
-#particle-canvas {
+/* Nền gradient động */
+.bg-aura {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  opacity: 0.5;
-  pointer-events: none;
+  background: radial-gradient(ellipse at 30% 40%, #1a1a2e 0%, #0a0a0f 100%);
+  z-index: -2;
 }
 
-/* 科技网格 */
-.grid-overlay {
+.bg-glow {
   position: fixed;
-  inset: 0;
-  background-image: 
-    linear-gradient(rgba(0, 255, 170, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 170, 0.07) 1px, transparent 1px);
-  background-size: 45px 45px;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.6;
-}
-
-/* 光晕球体 */
-.glow-orb {
-  position: fixed;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(circle, rgba(0, 200, 255, 0.15) 0%, rgba(0, 200, 255, 0) 70%);
+  top: -30vh;
+  right: -30vw;
   border-radius: 50%;
-  filter: blur(130px);
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.25;
-  animation: floatOrb 16s infinite alternate ease-in-out;
-}
-.orb-1 { width: 65vmin; height: 65vmin; background: var(--purple-grad); top: -12%; right: -8%; }
-.orb-2 { width: 75vmin; height: 75vmin; background: var(--green-primary); bottom: -18%; left: -12%; opacity: 0.2; animation-duration: 20s; }
-.orb-3 { width: 45vmin; height: 45vmin; background: var(--pink-accent); top: 45%; left: 20%; opacity: 0.18; filter: blur(100px); animation-duration: 13s; }
-
-@keyframes floatOrb {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(4%, 5%) scale(1.1); }
+  z-index: -1;
+  filter: blur(80px);
+  animation: float 18s infinite alternate;
 }
 
-/* 主容器 */
-.app-container {
+.bg-glow-2 {
+  position: fixed;
+  width: 70vw;
+  height: 70vw;
+  background: radial-gradient(circle, rgba(180, 100, 255, 0.12) 0%, rgba(180, 100, 255, 0) 70%);
+  bottom: -40vh;
+  left: -20vw;
+  border-radius: 50%;
+  z-index: -1;
+  filter: blur(90px);
+  animation: float 22s infinite alternate-reverse;
+}
+
+@keyframes float {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  100% { transform: translate(3%, 5%) scale(1.2); opacity: 0.8; }
+}
+
+/* Container chính - cân đối hoàn hảo */
+.app {
   position: relative;
-  z-index: 20;
+  z-index: 10;
   width: 100%;
-  max-width: 640px;
-  margin: 1rem;
-  padding: 0.5rem;
+  max-width: 560px;
+  margin: 1.5rem;
+  padding: 0;
 }
 
-/* ========= 头部 - 字体超级漂亮 ========= */
-.header-area {
+/* Header tối giản đẹp */
+.header {
   text-align: center;
   margin-bottom: 2rem;
 }
-.badge-timer {
+
+.badge {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background: rgba(0, 255, 170, 0.08);
-  border: 1px solid rgba(0, 255, 170, 0.35);
-  border-radius: 60px;
-  padding: 0.5rem 1.8rem;
-  font-family: 'JetBrains Mono', monospace;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 100px;
+  padding: 0.4rem 1.2rem;
   font-size: 0.7rem;
-  letter-spacing: 0.3em;
-  color: var(--green-primary);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: #a0a0b0;
   text-transform: uppercase;
   margin-bottom: 1.2rem;
-  backdrop-filter: blur(8px);
 }
-.badge-timer::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  background: var(--green-primary);
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  background: #00d4ff;
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--green-primary);
-  animation: pulseDot 1.5s infinite;
-}
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.6); }
+  box-shadow: 0 0 8px #00d4ff;
+  animation: pulse 1.5s infinite;
 }
 
-/* Chữ ĐẾM NGƯỢC siêu đẹp - chuẩn nét */
-.main-title {
-  font-family: 'Inter', 'Space Grotesk', sans-serif;
-  font-weight: 800;
-  font-size: clamp(3.2rem, 13vw, 7rem);
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  margin-top: 0.2rem;
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
 }
-.title-line1 {
+
+.title {
+  font-size: clamp(3rem, 12vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.title-top {
   display: block;
-  background: linear-gradient(115deg, #FFFFFF 0%, #C0E0FF 45%, #FFFFFF 100%);
+  color: #e8e8f0;
+  font-weight: 600;
+}
+
+.title-bottom {
+  display: block;
+  background: linear-gradient(135deg, #ffffff, #00d4ff, #a855f7);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 2px 12px rgba(0,255,170,0.15);
-}
-.title-line2 {
-  display: block;
-  background: linear-gradient(125deg, #00ffaa, #b87eff, #f472b6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 12px rgba(0,255,170,0.3));
-  letter-spacing: -0.01em;
+  font-weight: 700;
 }
 
-/* Glass card chính */
-.glass-card {
-  background: rgba(6, 10, 20, 0.75);
+/* Card chính - glassmorphism tinh tế */
+.card {
+  background: rgba(18, 18, 28, 0.7);
   backdrop-filter: blur(20px);
-  border-radius: 2rem;
-  border: 1px solid rgba(0, 255, 170, 0.25);
-  box-shadow: 0 25px 40px -16px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  padding: 1.8rem 1.6rem;
-  transition: all 0.2s;
+  border-radius: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card-inner {
+  padding: 1.8rem;
 }
 
 /* Tabs */
-.tab-bar {
+.tabs {
   display: flex;
-  gap: 0.6rem;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 0.4rem;
-  border-radius: 3rem;
-  margin-bottom: 2rem;
-  border: 1px solid rgba(255,255,255,0.06);
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0.3rem;
+  border-radius: 2rem;
+  margin-bottom: 1.8rem;
 }
+
 .tab {
   flex: 1;
   background: transparent;
   border: none;
   padding: 0.7rem 0.5rem;
   font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 0.88rem;
-  border-radius: 2.5rem;
-  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.8rem;
+  border-radius: 1.8rem;
+  color: #8a8a9e;
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .tab.active {
-  background: linear-gradient(105deg, rgba(0, 255, 170, 0.18), rgba(168, 85, 247, 0.12));
+  background: rgba(255, 255, 255, 0.08);
   color: white;
-  box-shadow: 0 0 12px rgba(0, 255, 170, 0.2);
-  border: 1px solid rgba(0, 255, 170, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* input style */
-.field-group label {
-  font-family: 'JetBrains Mono', monospace;
+/* Inputs */
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-label {
   font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  color: var(--green-primary);
+  font-weight: 500;
   text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8a8a9e;
   display: block;
   margin-bottom: 0.5rem;
 }
-.modern-input {
+
+.input-field {
   width: 100%;
-  background: rgba(1, 3, 12, 0.9);
-  border: 1.5px solid rgba(0, 255, 170, 0.3);
-  border-radius: 1.6rem;
+  background: rgba(10, 10, 18, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.2rem;
   padding: 0.9rem 1.2rem;
   color: white;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.2rem;
+  font-family: 'Inter', monospace;
+  font-size: 1rem;
   font-weight: 500;
   text-align: center;
   outline: none;
   transition: all 0.2s;
 }
-.modern-input:focus {
-  border-color: var(--green-primary);
-  box-shadow: 0 0 0 3px rgba(0, 255, 170, 0.2);
-  background: #050a15;
-}
-.time-row {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-end;
-}
-.arrow-symbol {
-  font-size: 2rem;
-  font-weight: 600;
-  color: var(--green-primary);
-  margin-bottom: 0.5rem;
-  text-shadow: 0 0 5px #00ffaa80;
-}
-.hint-sm {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  text-align: center;
-  margin-top: 0.6rem;
-  font-family: monospace;
-}
-.error-msg {
-  min-height: 2.5rem;
-  color: #ff6b8b;
-  font-size: 0.75rem;
-  text-align: center;
-  font-family: monospace;
-}
-.btn-primary {
-  background: linear-gradient(98deg, #00ffaa, #00cc99);
-  width: 100%;
-  border: none;
-  border-radius: 3rem;
-  padding: 1rem;
-  font-weight: 800;
-  font-size: 1rem;
-  letter-spacing: 0.12em;
-  color: #03060c;
-  text-transform: uppercase;
-  font-family: 'Inter', sans-serif;
-  cursor: pointer;
-  margin-top: 0.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 6px 18px rgba(0, 255, 170, 0.25);
-}
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(0, 255, 170, 0.45);
+
+.input-field:focus {
+  border-color: #00d4ff;
+  background: rgba(10, 10, 18, 1);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
 }
 
-/* Timer panel */
-.timer-container {
+.time-row {
   display: flex;
-  flex-direction: column;
+  gap: 0.8rem;
   align-items: center;
-  gap: 1.5rem;
 }
-.timer-label-tag {
-  background: rgba(0,255,170,0.1);
-  border-radius: 3rem;
-  padding: 0.35rem 1.5rem;
-  font-family: monospace;
-  font-size: 0.75rem;
-  color: #b3ffe6;
+
+.time-arrow {
+  font-size: 1.5rem;
+  color: #00d4ff;
+  margin-bottom: 0.2rem;
+  font-weight: 300;
 }
-.ring-wrapper {
+
+.hint-text {
+  font-size: 0.65rem;
+  color: #6a6a7e;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.error-msg {
+  min-height: 2rem;
+  font-size: 0.7rem;
+  text-align: center;
+  color: #ff6b8b;
+  margin-top: 0.5rem;
+}
+
+/* Button chính */
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(95deg, #00d4ff, #0099cc);
+  border: none;
+  border-radius: 1.8rem;
+  padding: 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  color: #0a0a0f;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.25s;
+  box-shadow: 0 4px 14px rgba(0, 212, 255, 0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.35);
+}
+
+/* Timer display */
+.timer-label {
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+
+.timer-badge {
+  display: inline-block;
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 2rem;
+  padding: 0.4rem 1.2rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #00d4ff;
+}
+
+/* Vòng tròn đếm ngược */
+.ring-area {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 1.2rem;
+}
+
+.ring {
   position: relative;
   width: 260px;
   height: 260px;
 }
+
 .ring-svg {
   position: absolute;
   top: 0;
   left: 0;
   transform: rotate(-90deg);
 }
-.ring-bg-track {
+
+.ring-track {
   fill: none;
-  stroke: #1e2a3a;
-  stroke-width: 12;
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 8;
 }
-.ring-glow-effect {
+
+.ring-progress {
   fill: none;
-  stroke: rgba(0,255,170,0.25);
-  stroke-width: 20;
+  stroke: url(#ringGradient);
+  stroke-width: 8;
   stroke-linecap: round;
-  filter: blur(3px);
+  transition: stroke-dashoffset 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
-.ring-active {
+
+.ring-glow {
   fill: none;
-  stroke: url(#gradRingColor);
-  stroke-width: 13;
+  stroke: rgba(0, 212, 255, 0.2);
+  stroke-width: 14;
+  filter: blur(4px);
   stroke-linecap: round;
-  transition: stroke-dashoffset 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
-.center-ring {
+
+.ring-center {
   position: absolute;
   inset: 0;
   display: flex;
@@ -322,464 +332,497 @@ body {
   align-items: center;
   justify-content: center;
 }
-.big-number {
-  font-family: 'Inter', sans-serif;
-  font-weight: 800;
-  font-size: 4.8rem;
-  background: linear-gradient(145deg, #ffffff, #b5ffe0);
+
+.ring-number {
+  font-family: 'Inter', monospace;
+  font-weight: 700;
+  font-size: 4.2rem;
+  background: linear-gradient(145deg, #ffffff, #a0f0ff);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: 0;
+  line-height: 1;
 }
-.unit-ring {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--green-primary);
+
+.ring-unit {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #8a8a9e;
+  margin-top: -4px;
 }
+
 .second-pill {
-  background: #0a1020;
-  padding: 0.5rem 1.4rem;
-  border-radius: 3rem;
-  font-family: monospace;
-  border: 1px solid rgba(0,255,170,0.3);
+  text-align: center;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 2rem;
+  padding: 0.4rem 1rem;
+  width: fit-content;
+  margin: 0 auto 1rem;
+  font-size: 0.8rem;
+  color: #b0b0c0;
 }
-.stat-grid {
+
+.second-pill strong {
+  color: #00d4ff;
+  font-size: 1rem;
+}
+
+/* Stats grid */
+.stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.8rem;
-  width: 100%;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
 }
+
 .stat-item {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3);
   border-radius: 1.2rem;
-  padding: 0.7rem 0.3rem;
+  padding: 0.7rem 0.2rem;
   text-align: center;
-  border: 1px solid rgba(0,255,170,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
-.stat-number {
-  font-size: 1.25rem;
+
+.stat-num {
+  font-size: 1.2rem;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: monospace;
   color: white;
 }
-.stat-caption {
+
+.stat-label {
   font-size: 0.6rem;
   text-transform: uppercase;
-  color: var(--green-primary);
+  color: #8a8a9e;
+  letter-spacing: 0.5px;
 }
-.progress-area {
-  width: 100%;
-}
-.progress-bg {
-  background: #121a2a;
-  height: 6px;
-  border-radius: 10px;
+
+/* Progress bar */
+.progress {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  height: 5px;
   overflow: hidden;
+  margin-bottom: 0.5rem;
 }
-.progress-active {
-  height: 100%;
+
+.progress-bar {
   width: 0%;
-  background: linear-gradient(90deg, #00ffaa, #bc7eff);
-  border-radius: 10px;
+  height: 100%;
+  background: linear-gradient(90deg, #00d4ff, #a855f7);
+  border-radius: 20px;
   transition: width 0.35s ease;
 }
+
 .progress-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 0.65rem;
-  margin-top: 8px;
-  color: var(--text-silver);
+  font-size: 0.6rem;
+  color: #6a6a7e;
+  margin-bottom: 1rem;
 }
-.endtime-block {
+
+.endtime-info {
+  text-align: center;
+  font-size: 0.7rem;
   font-family: monospace;
-  background: #030812;
-  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
   border-radius: 2rem;
-  font-size: 0.75rem;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  color: #a0a0b0;
 }
+
+.endtime-info strong {
+  color: #00d4ff;
+}
+
 .btn-outline {
   background: transparent;
-  border: 1px solid rgba(0,255,170,0.6);
-  border-radius: 3rem;
-  padding: 0.7rem 2rem;
-  font-family: monospace;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2rem;
+  padding: 0.7rem 1.5rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  color: var(--green-primary);
+  color: #d0d0e0;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.2s;
+  width: 100%;
 }
+
 .btn-outline:hover {
-  background: rgba(0,255,170,0.12);
-  box-shadow: 0 0 12px rgba(0,255,170,0.2);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(0, 212, 255, 0.4);
 }
+
+/* Done panel */
 .done-screen {
   text-align: center;
+  padding: 1rem 0;
 }
-.done-icon-lg {
-  font-size: 5rem;
-  filter: drop-shadow(0 0 14px #00ffaa);
-  margin-bottom: 0.6rem;
+
+.done-icon {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
 }
-.done-heading {
-  font-family: 'Inter', sans-serif;
-  font-size: 3rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #00ffaa, #c084fc);
+
+.done-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff, #00d4ff);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.done-message {
+  color: #8a8a9e;
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .card-inner {
+    padding: 1.2rem;
+  }
+  .ring {
+    width: 220px;
+    height: 220px;
+  }
+  .ring-number {
+    font-size: 3.2rem;
+  }
 }
 </style>
 </head>
 <body>
+<div class="bg-aura"></div>
+<div class="bg-glow"></div>
+<div class="bg-glow-2"></div>
 
-<canvas id="particle-canvas"></canvas>
-<div class="grid-overlay"></div>
-<div class="glow-orb orb-1"></div>
-<div class="glow-orb orb-2"></div>
-<div class="glow-orb orb-3"></div>
-
-<div class="app-container">
-  <div class="header-area">
-    <div class="badge-timer">CHRONOS</div>
-    <div class="main-title">
-      <span class="title-line1">ĐẾM</span>
-      <span class="title-line2">NGƯỢC</span>
+<div class="app">
+  <div class="header">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      <span>CHRONOS</span>
+    </div>
+    <div class="title">
+      <span class="title-top">ĐẾM</span>
+      <span class="title-bottom">NGƯỢC</span>
     </div>
   </div>
 
   <!-- Panel cài đặt -->
-  <div id="setupPanel" class="glass-card">
-    <div class="tab-bar">
-      <button class="tab active" id="minutesTabBtn">📌 SỐ PHÚT</button>
-      <button class="tab" id="rangeTabBtn">⏲️ KHUNG GIỜ</button>
-    </div>
-    <div id="minutesModeDiv">
-      <div class="field-group">
-        <label>⏱️ NHẬP SỐ PHÚT</label>
-        <input type="number" id="minutesInput" class="modern-input" placeholder="Ví dụ: 45" value="30">
+  <div id="setupPanel" class="card">
+    <div class="card-inner">
+      <div class="tabs">
+        <button class="tab active" id="tabMinutes">Số phút</button>
+        <button class="tab" id="tabRange">Khung giờ</button>
       </div>
-      <div class="hint-sm">🔹 Từ 1 đến 9999 phút</div>
-    </div>
-    <div id="rangeModeDiv" style="display: none;">
-      <div class="time-row">
-        <div class="field-group" style="flex:1">
-          <label>BẮT ĐẦU</label>
-          <input type="time" id="fromTime" class="modern-input" value="09:00">
+
+      <div id="minutesMode">
+        <div class="input-group">
+          <div class="input-label">Nhập số phút</div>
+          <input type="number" id="minutesInput" class="input-field" value="30" placeholder="Ví dụ: 45">
         </div>
-        <div class="arrow-symbol">→</div>
-        <div class="field-group" style="flex:1">
-          <label>KẾT THÚC</label>
-          <input type="time" id="toTime" class="modern-input" value="10:25">
-        </div>
+        <div class="hint-text">Từ 1 đến 9999 phút</div>
       </div>
-      <div class="hint-sm">✨ Tự động tính số phút chênh lệch</div>
+
+      <div id="rangeMode" style="display: none;">
+        <div class="time-row">
+          <div class="input-group" style="flex: 1">
+            <div class="input-label">Bắt đầu</div>
+            <input type="time" id="startTime" class="input-field" value="14:30">
+          </div>
+          <div class="time-arrow">→</div>
+          <div class="input-group" style="flex: 1">
+            <div class="input-label">Kết thúc</div>
+            <input type="time" id="endTime" class="input-field" value="16:00">
+          </div>
+        </div>
+        <div class="hint-text">Tự động tính khoảng thời gian</div>
+      </div>
+
+      <div id="errorMsg" class="error-msg"></div>
+      <button class="btn-primary" id="startBtn">Bắt đầu</button>
     </div>
-    <div class="error-msg" id="globalError"></div>
-    <button class="btn-primary" id="startCountdownBtn">▶ BẮT ĐẦU</button>
   </div>
 
   <!-- Panel đếm ngược -->
-  <div id="timerPanel" style="display: none;">
-    <div class="glass-card timer-container">
-      <div class="timer-label-tag" id="timerTagLabel">-- phút</div>
-      <div class="ring-wrapper">
-        <svg class="ring-svg" viewBox="0 0 280 280" width="260" height="260">
-          <defs>
-            <linearGradient id="gradRingColor" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#00ffaa"/>
-              <stop offset="100%" stop-color="#b87eff"/>
-            </linearGradient>
-          </defs>
-          <circle class="ring-bg-track" cx="140" cy="140" r="120"/>
-          <circle class="ring-glow-effect" id="ringGlowLayer" cx="140" cy="140" r="120" stroke-dasharray="753.98" stroke-dashoffset="0"/>
-          <circle class="ring-active" id="ringProgressMain" cx="140" cy="140" r="120" stroke-dasharray="753.98" stroke-dashoffset="0"/>
-        </svg>
-        <div class="center-ring">
-          <div class="big-number" id="remainingMinutes">00</div>
-          <div class="unit-ring">phút</div>
+  <div id="timerPanel" class="card" style="display: none;">
+    <div class="card-inner">
+      <div class="timer-label">
+        <span class="timer-badge" id="timerTag">-- phút</span>
+      </div>
+
+      <div class="ring-area">
+        <div class="ring">
+          <svg class="ring-svg" viewBox="0 0 260 260" width="260" height="260">
+            <defs>
+              <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00d4ff"/>
+                <stop offset="100%" stop-color="#a855f7"/>
+              </linearGradient>
+            </defs>
+            <circle class="ring-track" cx="130" cy="130" r="115" fill="none"/>
+            <circle class="ring-glow" id="ringGlow" cx="130" cy="130" r="115" stroke-dasharray="722.57" stroke-dashoffset="0"/>
+            <circle class="ring-progress" id="ringProgress" cx="130" cy="130" r="115" stroke-dasharray="722.57" stroke-dashoffset="0"/>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-number" id="remainMinutes">00</div>
+            <div class="ring-unit">phút</div>
+          </div>
         </div>
       </div>
-      <div class="second-pill">⏳ còn <strong id="remainingSecondsText">00</strong> giây</div>
-      <div class="stat-grid">
-        <div class="stat-item"><div class="stat-number" id="percentDone">0%</div><div class="stat-caption">đã qua</div></div>
-        <div class="stat-item"><div class="stat-number" id="remainingFormatted">--</div><div class="stat-caption">còn lại</div></div>
-        <div class="stat-item"><div class="stat-number" id="totalFormatted">--</div><div class="stat-caption">tổng</div></div>
+
+      <div class="second-pill">
+        ⏱️ còn <strong id="remainSeconds">00</strong> giây
       </div>
-      <div class="progress-area">
-        <div class="progress-bg"><div class="progress-active" id="progressFillActive"></div></div>
-        <div class="progress-meta"><span id="progressLeftMeta">0%</span><span id="progressRightMeta">--</span></div>
+
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-num" id="percentVal">0%</div>
+          <div class="stat-label">đã qua</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="remainStat">--</div>
+          <div class="stat-label">còn lại</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="totalStat">--</div>
+          <div class="stat-label">tổng</div>
+        </div>
       </div>
-      <div class="endtime-block">🎯 Kết thúc lúc: <strong id="endTimeHumanRead">--:--:--</strong></div>
-      <button class="btn-outline" id="resetTimerButton">↻ ĐẶT LẠI</button>
+
+      <div class="progress">
+        <div class="progress-bar" id="progressFill"></div>
+      </div>
+      <div class="progress-meta">
+        <span id="progressLeft">0%</span>
+        <span id="progressRight">-- giây còn</span>
+      </div>
+
+      <div class="endtime-info">
+        🎯 Kết thúc lúc <strong id="endTimeHuman">--:--:--</strong>
+      </div>
+
+      <button class="btn-outline" id="resetBtn">↻ Đặt lại</button>
     </div>
   </div>
 
   <!-- Panel hoàn thành -->
-  <div id="donePanel" style="display: none;">
-    <div class="glass-card done-screen">
-      <div class="done-icon-lg">🎉✨🎉</div>
-      <div class="done-heading">HOÀN THÀNH</div>
-      <p style="margin: 1rem 0; font-family: monospace; color: #b7c3e6;" id="completeMessage">Đếm ngược kết thúc xuất sắc</p>
-      <button class="btn-primary" id="doneResetButton" style="max-width: 200px; margin: 0 auto;">LÀM LẠI</button>
+  <div id="donePanel" class="card" style="display: none;">
+    <div class="card-inner done-screen">
+      <div class="done-icon">✨🎉✨</div>
+      <div class="done-title">Hoàn thành</div>
+      <div class="done-message" id="doneMsg">Đếm ngược đã kết thúc</div>
+      <button class="btn-primary" id="doneResetBtn">Làm lại</button>
     </div>
   </div>
 </div>
 
 <script>
-  (function(){
-    // ---------- Background CANVAS tiên tiến ----------
-    const canvas = document.getElementById('particle-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height, particlesList = [];
-    
-    function resizeCanvas(){
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+(function() {
+  // DOM
+  const setupDiv = document.getElementById('setupPanel');
+  const timerDiv = document.getElementById('timerPanel');
+  const doneDiv = document.getElementById('donePanel');
+  const minutesMode = document.getElementById('minutesMode');
+  const rangeMode = document.getElementById('rangeMode');
+  const minutesInput = document.getElementById('minutesInput');
+  const startTime = document.getElementById('startTime');
+  const endTime = document.getElementById('endTime');
+  const errorMsg = document.getElementById('errorMsg');
+  const startBtn = document.getElementById('startBtn');
+  const tabMinutes = document.getElementById('tabMinutes');
+  const tabRange = document.getElementById('tabRange');
+  const resetBtn = document.getElementById('resetBtn');
+  const doneResetBtn = document.getElementById('doneResetBtn');
+  
+  // Timer elements
+  const timerTag = document.getElementById('timerTag');
+  const remainMinutesSpan = document.getElementById('remainMinutes');
+  const remainSecondsSpan = document.getElementById('remainSeconds');
+  const percentValSpan = document.getElementById('percentVal');
+  const remainStatSpan = document.getElementById('remainStat');
+  const totalStatSpan = document.getElementById('totalStat');
+  const progressFill = document.getElementById('progressFill');
+  const progressLeft = document.getElementById('progressLeft');
+  const progressRight = document.getElementById('progressRight');
+  const endTimeHuman = document.getElementById('endTimeHuman');
+  const ringProgress = document.getElementById('ringProgress');
+  const ringGlow = document.getElementById('ringGlow');
+  const doneMsgSpan = document.getElementById('doneMsg');
+  
+  const CIRCUM = 722.566; // 2 * PI * 115
+  
+  let activeMode = 'minutes';
+  let timerInterval = null;
+  let targetTime = null;
+  let totalDuration = null;
+  
+  function stopTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+  }
+  
+  function resetToSetup() {
+    stopTimer();
+    targetTime = null;
+    totalDuration = null;
+    setupDiv.style.display = 'block';
+    timerDiv.style.display = 'none';
+    doneDiv.style.display = 'none';
+    errorMsg.innerText = '';
+  }
+  
+  function formatDuration(ms) {
+    const sec = Math.floor(ms / 1000);
+    const mins = Math.floor(sec / 60);
+    const hours = Math.floor(mins / 60);
+    if (hours > 0) return `${hours}h ${mins % 60}p`;
+    return `${mins}p ${sec % 60}s`;
+  }
+  
+  function updateDisplay(remainingMs) {
+    if (!totalDuration || remainingMs <= 0) return true;
+    const elapsed = totalDuration - remainingMs;
+    const percent = Math.min(1, Math.max(0, elapsed / totalDuration));
+    const percentInt = Math.floor(percent * 100);
     
-    class ParticleFlow{
-      constructor(){
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.radius = Math.random() * 1.8 + 0.5;
-        this.vx = (Math.random() - 0.5) * 0.2;
-        this.vy = (Math.random() - 0.5) * 0.2;
-        this.alpha = Math.random() * 0.55 + 0.1;
-        this.colorGroup = Math.random() > 0.6 ? '0,255,170' : '139,92,246';
+    percentValSpan.innerText = `${percentInt}%`;
+    remainStatSpan.innerText = formatDuration(remainingMs);
+    
+    const secLeft = Math.ceil(remainingMs / 1000);
+    const minsLeft = Math.floor(secLeft / 60);
+    const secsOnly = secLeft % 60;
+    
+    remainMinutesSpan.innerText = minsLeft.toString().padStart(2, '0');
+    remainSecondsSpan.innerText = secsOnly.toString().padStart(2, '0');
+    
+    progressFill.style.width = `${percentInt}%`;
+    progressLeft.innerText = `${percentInt}% đã qua`;
+    progressRight.innerText = `${secLeft} giây còn`;
+    
+    const offset = CIRCUM * percent;
+    ringProgress.style.strokeDashoffset = offset;
+    ringGlow.style.strokeDashoffset = offset;
+    
+    return false;
+  }
+  
+  function startCountdown() {
+    if (!targetTime || !totalDuration) return;
+    
+    function tick() {
+      const now = Date.now();
+      const remaining = targetTime - now;
+      if (remaining <= 0) {
+        stopTimer();
+        const totalMins = Math.round(totalDuration / 60000);
+        doneMsgSpan.innerText = `✅ ${totalMins} phút đã trôi qua thành công!`;
+        timerDiv.style.display = 'none';
+        doneDiv.style.display = 'flex';
+        return;
       }
-      update(){
-        this.x += this.vx;
-        this.y += this.vy;
-        if(this.x < -20) this.x = width + 20;
-        if(this.x > width+20) this.x = -20;
-        if(this.y < -20) this.y = height + 20;
-        if(this.y > height+20) this.y = -20;
-      }
-      draw(){
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
-        ctx.fillStyle = `rgba(${this.colorGroup}, ${this.alpha})`;
-        ctx.fill();
-      }
-    }
-    for(let i=0;i<140;i++) particlesList.push(new ParticleFlow());
-    
-    function drawConnections(){
-      for(let i=0;i<particlesList.length;i++){
-        for(let j=i+1;j<particlesList.length;j++){
-          const dx = particlesList[i].x - particlesList[j].x;
-          const dy = particlesList[i].y - particlesList[j].y;
-          const dist = Math.hypot(dx, dy);
-          if(dist < 110){
-            ctx.beginPath();
-            ctx.moveTo(particlesList[i].x, particlesList[i].y);
-            ctx.lineTo(particlesList[j].x, particlesList[j].y);
-            ctx.strokeStyle = `rgba(0, 210, 160, ${0.05 * (1 - dist/110)})`;
-            ctx.lineWidth = 0.7;
-            ctx.stroke();
-          }
-        }
-      }
+      updateDisplay(remaining);
     }
     
-    function animateBackground(){
-      ctx.clearRect(0, 0, width, height);
-      for(let p of particlesList) { p.update(); p.draw(); }
-      drawConnections();
-      requestAnimationFrame(animateBackground);
-    }
-    animateBackground();
-    
-    // ---------- LOGIC ĐẾM NGƯỢC ----------
-    let activeMode = 'minutes';
-    let timerInterval = null;
-    let targetEndTime = null;
-    let totalDurationMs = null;
-    const CIRCUM = 753.9822368615503;
-    
-    // DOM
-    const setupDiv = document.getElementById('setupPanel');
-    const timerDiv = document.getElementById('timerPanel');
-    const doneDiv = document.getElementById('donePanel');
-    const minutesModeDiv = document.getElementById('minutesModeDiv');
-    const rangeModeDiv = document.getElementById('rangeModeDiv');
-    const minutesInput = document.getElementById('minutesInput');
-    const fromTime = document.getElementById('fromTime');
-    const toTime = document.getElementById('toTime');
-    const errorSpan = document.getElementById('globalError');
-    const startBtn = document.getElementById('startCountdownBtn');
-    const minutesTab = document.getElementById('minutesTabBtn');
-    const rangeTab = document.getElementById('rangeTabBtn');
-    const resetTimer = document.getElementById('resetTimerButton');
-    const resetDone = document.getElementById('doneResetButton');
-    
-    // Timer display elements
-    const timerTag = document.getElementById('timerTagLabel');
-    const remainingMinsSpan = document.getElementById('remainingMinutes');
-    const remainingSecsSpan = document.getElementById('remainingSecondsText');
-    const percentDoneSpan = document.getElementById('percentDone');
-    const remainingFormattedSpan = document.getElementById('remainingFormatted');
-    const totalFormattedSpan = document.getElementById('totalFormatted');
-    const progressFill = document.getElementById('progressFillActive');
-    const progressLeftMeta = document.getElementById('progressLeftMeta');
-    const progressRightMeta = document.getElementById('progressRightMeta');
-    const endTimeHumanSpan = document.getElementById('endTimeHumanRead');
-    const ringProgress = document.getElementById('ringProgressMain');
-    const ringGlowLayer = document.getElementById('ringGlowLayer');
-    const completeMsgSpan = document.getElementById('completeMessage');
-    
-    function formatTimeSmart(ms){
-      let secTot = Math.floor(ms/1000);
-      let mins = Math.floor(secTot/60);
-      let hours = Math.floor(mins/60);
-      if(hours>0) return `${hours}g ${mins%60}p`;
-      return `${mins}p ${secTot%60}s`;
-    }
-    
-    function stopCountdown(){
-      if(timerInterval){
-        clearInterval(timerInterval);
-        timerInterval = null;
-      }
-    }
-    
-    function resetToSetup(){
-      stopCountdown();
-      targetEndTime = null;
-      totalDurationMs = null;
-      setupDiv.style.display = 'block';
-      timerDiv.style.display = 'none';
-      doneDiv.style.display = 'none';
-      errorSpan.innerText = '';
-    }
-    
-    function updateTimerDisplay(remainingMs){
-      if(!totalDurationMs || remainingMs <= 0) return true;
-      const elapsed = totalDurationMs - remainingMs;
-      let percent = Math.min(1, Math.max(0, elapsed / totalDurationMs));
-      let percentInt = Math.floor(percent * 100);
-      percentDoneSpan.innerText = `${percentInt}%`;
-      remainingFormattedSpan.innerText = formatTimeSmart(remainingMs);
-      const secLeft = Math.ceil(remainingMs/1000);
-      const minsLeft = Math.floor(secLeft / 60);
-      const secs = secLeft % 60;
-      remainingMinsSpan.innerText = minsLeft.toString().padStart(2,'0');
-      remainingSecsSpan.innerText = secs.toString().padStart(2,'0');
-      progressFill.style.width = `${percentInt}%`;
-      progressLeftMeta.innerText = `${percentInt}% đã qua`;
-      progressRightMeta.innerText = `${secLeft} giây còn lại`;
-      const offset = CIRCUM * percent;
-      ringProgress.style.strokeDashoffset = offset;
-      ringGlowLayer.style.strokeDashoffset = offset;
+    tick();
+    timerInterval = setInterval(tick, 200);
+  }
+  
+  function launchTimer(durationMs, label, endDate) {
+    if (durationMs <= 0) {
+      errorMsg.innerText = 'Thời gian không hợp lệ';
       return false;
     }
+    stopTimer();
+    totalDuration = durationMs;
+    targetTime = Date.now() + durationMs;
+    timerTag.innerText = label;
+    totalStatSpan.innerText = formatDuration(durationMs);
+    endTimeHuman.innerText = endDate.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     
-    function startTicking(){
-      if(!targetEndTime || !totalDurationMs) return;
-      function tick(){
-        const now = Date.now();
-        let remaining = targetEndTime - now;
-        if(remaining <= 0){
-          stopCountdown();
-          const totalMins = Math.round(totalDurationMs / 60000);
-          completeMsgSpan.innerText = `✅ Hoàn thành ${totalMins} phút đếm ngược.`;
-          timerDiv.style.display = 'none';
-          doneDiv.style.display = 'flex';
-          return;
-        }
-        updateTimerDisplay(remaining);
+    setupDiv.style.display = 'none';
+    timerDiv.style.display = 'flex';
+    doneDiv.style.display = 'none';
+    
+    startCountdown();
+    return true;
+  }
+  
+  function onStart() {
+    errorMsg.innerText = '';
+    if (activeMode === 'minutes') {
+      let mins = parseInt(minutesInput.value);
+      if (isNaN(mins) || mins < 1) {
+        errorMsg.innerText = '⚠️ Vui lòng nhập số phút hợp lệ (≥ 1)';
+        return;
       }
-      tick();
-      timerInterval = setInterval(tick, 360);
-    }
-    
-    function startCountdown(totalMs, labelDesc, endDateObj){
-      if(totalMs <= 0){
-        errorSpan.innerText = 'Thời gian không hợp lệ';
-        return false;
+      if (mins > 9999) {
+        errorMsg.innerText = '⚠️ Số phút tối đa là 9999';
+        return;
       }
-      stopCountdown();
-      totalDurationMs = totalMs;
-      targetEndTime = Date.now() + totalMs;
-      timerTag.innerText = labelDesc;
-      totalFormattedSpan.innerText = formatTimeSmart(totalMs);
-      endTimeHumanSpan.innerText = endDateObj.toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-      setupDiv.style.display = 'none';
-      timerDiv.style.display = 'flex';
-      doneDiv.style.display = 'none';
-      startTicking();
-      return true;
-    }
-    
-    function onStart(){
-      errorSpan.innerText = '';
-      if(activeMode === 'minutes'){
-        let minsVal = parseInt(minutesInput.value);
-        if(isNaN(minsVal) || minsVal < 1){
-          errorSpan.innerText = '⚠️ Nhập số phút hợp lệ (>=1)';
-          return;
-        }
-        if(minsVal > 9999){
-          errorSpan.innerText = '⚠️ Số phút tối đa 9999';
-          return;
-        }
-        const duration = minsVal * 60000;
-        const endDate = new Date(Date.now() + duration);
-        startCountdown(duration, `${minsVal} phút`, endDate);
-      } else {
-        let fromVal = fromTime.value;
-        let toVal = toTime.value;
-        if(!fromVal || !toVal){
-          errorSpan.innerText = 'Chọn đủ thời gian bắt đầu & kết thúc';
-          return;
-        }
-        let [fh, fm] = fromVal.split(':').map(Number);
-        let [th, tm] = toVal.split(':').map(Number);
-        let fromMins = fh*60+fm;
-        let toMins = th*60+tm;
-        if(toMins <= fromMins) toMins += 1440;
-        let diffMins = toMins - fromMins;
-        if(diffMins <= 0 || diffMins > 2880){
-          errorSpan.innerText = '⚠️ Khoảng thời gian không hợp lệ (tối đa 48h)';
-          return;
-        }
-        const duration = diffMins * 60000;
-        const endDate = new Date(Date.now() + duration);
-        startCountdown(duration, `${fromVal} → ${toVal} (${diffMins} phút)`, endDate);
+      const duration = mins * 60000;
+      const endDate = new Date(Date.now() + duration);
+      launchTimer(duration, `${mins} phút`, endDate);
+    } else {
+      const fromVal = startTime.value;
+      const toVal = endTime.value;
+      if (!fromVal || !toVal) {
+        errorMsg.innerText = '⚠️ Chọn đầy đủ thời gian';
+        return;
       }
-    }
-    
-    function setUIMode(mode){
-      activeMode = mode;
-      if(mode === 'minutes'){
-        minutesModeDiv.style.display = 'block';
-        rangeModeDiv.style.display = 'none';
-        minutesTab.classList.add('active');
-        rangeTab.classList.remove('active');
-      } else {
-        minutesModeDiv.style.display = 'none';
-        rangeModeDiv.style.display = 'block';
-        rangeTab.classList.add('active');
-        minutesTab.classList.remove('active');
+      let [fh, fm] = fromVal.split(':').map(Number);
+      let [th, tm] = toVal.split(':').map(Number);
+      let fromTotal = fh * 60 + fm;
+      let toTotal = th * 60 + tm;
+      if (toTotal <= fromTotal) toTotal += 1440;
+      let diffMins = toTotal - fromTotal;
+      if (diffMins <= 0 || diffMins > 2880) {
+        errorMsg.innerText = '⚠️ Khoảng thời gian không hợp lệ (tối đa 48 giờ)';
+        return;
       }
-      errorSpan.innerText = '';
+      const duration = diffMins * 60000;
+      const endDate = new Date(Date.now() + duration);
+      launchTimer(duration, `${fromVal} → ${toVal} (${diffMins} phút)`, endDate);
     }
-    
-    minutesTab.addEventListener('click', () => setUIMode('minutes'));
-    rangeTab.addEventListener('click', () => setUIMode('range'));
-    startBtn.addEventListener('click', onStart);
-    resetTimer.addEventListener('click', resetToSetup);
-    resetDone.addEventListener('click', resetToSetup);
-    
-    setUIMode('minutes');
-    minutesInput.value = "35";
-    fromTime.value = "13:30";
-    toTime.value = "14:50";
-  })();
+  }
+  
+  function setMode(mode) {
+    activeMode = mode;
+    if (mode === 'minutes') {
+      minutesMode.style.display = 'block';
+      rangeMode.style.display = 'none';
+      tabMinutes.classList.add('active');
+      tabRange.classList.remove('active');
+    } else {
+      minutesMode.style.display = 'none';
+      rangeMode.style.display = 'block';
+      tabRange.classList.add('active');
+      tabMinutes.classList.remove('active');
+    }
+    errorMsg.innerText = '';
+  }
+  
+  // Events
+  tabMinutes.addEventListener('click', () => setMode('minutes'));
+  tabRange.addEventListener('click', () => setMode('range'));
+  startBtn.addEventListener('click', onStart);
+  resetBtn.addEventListener('click', resetToSetup);
+  doneResetBtn.addEventListener('click', resetToSetup);
+  
+  // Set defaults
+  setMode('minutes');
+  minutesInput.value = '25';
+  startTime.value = '09:00';
+  endTime.value = '10:30';
+})();
 </script>
 </body>
 </html>
