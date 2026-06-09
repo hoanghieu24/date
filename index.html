@@ -2,230 +2,721 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chronos — Đếm Ngược</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Chronos — 优雅倒计时 | 动态美学</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:#f5f5f0;font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
-@media(prefers-color-scheme:dark){
-  body{background:#111113}
-  .card{background:#1c1c1f;border-color:#2e2e32}
-  .tabs{background:#111113;border-color:#2e2e32}
-  .tab.active{background:#1c1c1f;color:#378add}
-  .tab{color:#888}
-  .field{background:#111113;border-color:#2e2e32;color:#f0f0f0}
-  .hint{color:#555}
-  .stat{background:#111113;border-color:#2e2e32}
-  .stat-n{color:#f0f0f0}
-  .stat-l{color:#555}
-  .prog-bg{background:#2e2e32}
-  .end-info{background:#111113;border-color:#2e2e32;color:#aaa}
-  .btn-reset{border-color:#2e2e32;color:#aaa}
-  .btn-reset:hover{background:#2e2e32;border-color:#378add;color:#378add}
-  .timer-tag{background:#0c447c22;border-color:#185FA5;color:#378add}
-  .badge{background:#0c447c22;border-color:#185FA5;color:#378add}
-  .done-title,.main-title{color:#f0f0f0}
-  .done-sub{color:#888}
-  .lbl{color:#666}
-  .ring-track{stroke:#2e2e32}
-  #rMins{fill:#f0f0f0}
-  #rUnit,#rSecs{fill:#aaa}
-  .err{color:#f09595}
-  .arrow-div{color:#555}
-}
-.wrap{display:flex;flex-direction:column;align-items:center;gap:0;width:100%;max-width:460px}
-.badge{display:inline-flex;align-items:center;gap:6px;background:#e6f1fb;border:0.5px solid #85b7eb;border-radius:100px;padding:4px 14px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#185FA5;margin-bottom:1rem}
-.badge-dot{width:6px;height:6px;background:#185FA5;border-radius:50%;animation:pdot 1.4s infinite}
-@keyframes pdot{0%,100%{opacity:.3}50%{opacity:1}}
-.main-title{font-size:clamp(2.2rem,9vw,3.2rem);font-weight:600;text-align:center;line-height:1;margin-bottom:1.5rem;color:#111113;letter-spacing:-.02em}
-.main-title em{font-style:normal;color:#185FA5}
-.card{background:#fff;border:0.5px solid #d3d1c7;border-radius:16px;width:100%;overflow:hidden}
-.card-body{padding:1.5rem}
-.tabs{display:flex;background:#f1efe8;border-radius:10px;overflow:hidden;margin-bottom:1.25rem;border:0.5px solid #d3d1c7}
-.tab{flex:1;background:transparent;border:none;padding:9px 8px;font-size:12px;font-weight:500;color:#888780;cursor:pointer;transition:all .2s;letter-spacing:.05em;text-transform:uppercase;font-family:'Inter',sans-serif;border-bottom:2px solid transparent}
-.tab.active{background:#fff;color:#185FA5;border-bottom:2px solid #185FA5}
-.lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:#888780;display:block;margin-bottom:5px}
-.field{width:100%;background:#f1efe8;border:0.5px solid #b4b2a9;border-radius:8px;padding:10px 14px;color:#111113;font-size:15px;font-weight:500;text-align:center;outline:none;transition:border-color .2s,box-shadow .2s;font-family:'Space Mono',monospace}
-.field:focus{border-color:#185FA5;box-shadow:0 0 0 3px #e6f1fb}
-.time-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end}
-.arrow-div{display:flex;align-items:center;justify-content:center;padding-bottom:10px;color:#b4b2a9;font-size:18px}
-.hint{font-size:11px;color:#888780;text-align:center;margin-top:6px}
-.err{min-height:20px;font-size:11px;color:#a32d2d;text-align:center;margin:6px 0 0}
-.btn-start{width:100%;background:#185FA5;border:none;border-radius:8px;padding:12px;font-weight:600;font-size:13px;letter-spacing:.06em;color:#fff;text-transform:uppercase;cursor:pointer;margin-top:1rem;transition:all .2s;font-family:'Inter',sans-serif}
-.btn-start:hover{background:#0c447c;transform:translateY(-1px)}
-.btn-start:active{transform:translateY(0)}
-.timer-tag{display:inline-block;background:#e6f1fb;border:0.5px solid #85b7eb;border-radius:100px;padding:4px 14px;font-size:11px;font-weight:600;color:#185FA5;margin-bottom:1.25rem;letter-spacing:.05em}
-.ring-wrap{display:flex;justify-content:center;margin:0 0 1rem}
-.ring-svg{display:block}
-.ring-track{fill:none;stroke:#e8e8e8;stroke-width:7}
-.ring-prog{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .35s cubic-bezier(.2,.9,.4,1.1)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
-.stat{background:#f1efe8;border-radius:8px;padding:10px 4px;text-align:center;border:0.5px solid #d3d1c7}
-.stat-n{font-size:15px;font-weight:600;color:#111113;font-family:'Space Mono',monospace}
-.stat-l{font-size:10px;text-transform:uppercase;color:#888780;letter-spacing:.08em;margin-top:2px}
-.prog-bg{background:#e8e8e4;border-radius:20px;height:4px;overflow:hidden;margin-bottom:4px}
-.prog-bar{height:100%;background:#185FA5;border-radius:20px;transition:width .35s cubic-bezier(.2,.9,.4,1.1);width:0%}
-.prog-meta{display:flex;justify-content:space-between;font-size:10px;color:#888780;margin-bottom:1rem}
-.end-info{text-align:center;font-size:12px;font-family:'Space Mono',monospace;background:#f1efe8;border-radius:8px;padding:8px 12px;margin-bottom:1rem;color:#5f5e5a;border:0.5px solid #d3d1c7}
-.end-info strong{color:#185FA5}
-.btn-reset{width:100%;background:transparent;border:0.5px solid #d3d1c7;border-radius:8px;padding:10px;font-size:12px;font-weight:500;color:#888780;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.05em;font-family:'Inter',sans-serif}
-.btn-reset:hover{background:#f1efe8;border-color:#85b7eb;color:#185FA5}
-.done-body{text-align:center;padding:2.5rem 1.5rem}
-.done-icon{font-size:3rem;margin-bottom:.75rem}
-.done-title{font-size:1.8rem;font-weight:600;color:#111113;margin-bottom:.5rem}
-.done-sub{font-size:13px;color:#5f5e5a;margin-bottom:1.5rem}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: linear-gradient(145deg, #f1efe7 0%, #e8e5da 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    padding: 1.5rem;
+    position: relative;
+    transition: background 0.4s ease;
+  }
+
+  /* 动态粒子光晕背景 (华丽氛围) */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 40%, rgba(24,95,165,0.08) 0%, rgba(83,74,183,0.05) 80%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    max-width: 480px;
+    animation: floatIn 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  }
+
+  @keyframes floatIn {
+    0% { opacity: 0; transform: translateY(25px) scale(0.97); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* 精致徽章 */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(24, 95, 165, 0.12);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(24, 95, 165, 0.35);
+    border-radius: 80px;
+    padding: 6px 18px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #185FA5;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  }
+  .badge-dot {
+    width: 7px;
+    height: 7px;
+    background: #185FA5;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #378add;
+    animation: pulseGlow 1.6s infinite ease-in-out;
+  }
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); box-shadow: 0 0 0px #185FA5; }
+    50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 8px #378add; }
+  }
+
+  .main-title {
+    font-size: clamp(2.4rem, 10vw, 3.8rem);
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.1;
+    margin-bottom: 1.8rem;
+    color: #121212;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #0F2B3D, #1C4E6E);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  .main-title em {
+    font-style: normal;
+    background: linear-gradient(145deg, #185FA5, #5A4BCF);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: 800;
+  }
+
+  /* 卡片光泽+动态阴影 */
+  .card {
+    background: rgba(255, 255, 250, 0.96);
+    backdrop-filter: blur(2px);
+    border-radius: 36px;
+    box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,235,0.7);
+    width: 100%;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.3s;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 30px 50px -16px rgba(0, 0, 0, 0.25);
+  }
+
+  .card-body {
+    padding: 1.8rem;
+  }
+
+  /* 优雅选项卡 */
+  .tabs {
+    display: flex;
+    background: #f1efe2;
+    border-radius: 60px;
+    overflow: hidden;
+    margin-bottom: 1.8rem;
+    padding: 4px;
+    gap: 4px;
+    background: #e9e7dd;
+  }
+  .tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 12px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    color: #5e5b52;
+  }
+  .tab.active {
+    background: white;
+    color: #185FA5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  /* 输入域新美学 */
+  .lbl {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #7a7568;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .field {
+    width: 100%;
+    background: #fdfcf8;
+    border: 1.5px solid #e2dfd4;
+    border-radius: 28px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    outline: none;
+    transition: all 0.2s;
+    font-family: 'Space Mono', monospace;
+    color: #1e2a36;
+  }
+  .field:focus {
+    border-color: #185FA5;
+    box-shadow: 0 0 0 4px rgba(24, 95, 165, 0.2);
+    background: white;
+  }
+  .time-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+  .time-row > div { flex: 1; }
+  .arrow-div {
+    font-size: 24px;
+    font-weight: 300;
+    color: #88847a;
+    padding-bottom: 10px;
+  }
+  .hint {
+    font-size: 10px;
+    color: #989588;
+    text-align: center;
+    margin-top: 8px;
+  }
+  .err {
+    min-height: 28px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #e06565;
+    text-align: center;
+    margin: 10px 0 0;
+    background: rgba(224,101,101,0.08);
+    border-radius: 50px;
+    padding: 4px;
+  }
+
+  /* 霓虹启动按钮 */
+  .btn-start {
+    width: 100%;
+    background: linear-gradient(105deg, #185FA5 0%, #2E4AAD 100%);
+    border: none;
+    border-radius: 44px;
+    padding: 14px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    color: white;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 1.6rem;
+    transition: all 0.25s;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 8px 18px rgba(24,95,165,0.3);
+  }
+  .btn-start:hover {
+    background: linear-gradient(105deg, #0F4A82, #1F3C97);
+    transform: scale(1.02);
+    box-shadow: 0 12px 24px rgba(24,95,165,0.4);
+  }
+
+  /* timer 装饰 */
+  .timer-tag {
+    display: inline-block;
+    background: rgba(24, 95, 165, 0.12);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(24,95,165,0.4);
+    border-radius: 60px;
+    padding: 6px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #185FA5;
+    margin-bottom: 1.3rem;
+    transition: 0.2s;
+  }
+
+  /* 环形动画 & 现代质感 */
+  .ring-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 0.8rem;
+    filter: drop-shadow(0 8px 14px rgba(0,0,0,0.1));
+  }
+  .ring-svg {
+    display: block;
+    transition: all 0.2s;
+  }
+  .ring-track {
+    fill: none;
+    stroke: #e2dfd4;
+    stroke-width: 8;
+  }
+  .ring-prog {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    filter: drop-shadow(0 0 3px rgba(24,95,165,0.5));
+  }
+  /* 数字活力 */
+  #rMins { fill: #101010; font-weight: 700; font-size: 48px; }
+  #rUnit { fill: #7e7a6e; font-weight: 500; }
+  #rSecs { fill: #185FA5; font-weight: 600; letter-spacing: 0.5px; }
+
+  /* 卡片内统计 灵动卡片 */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 1rem 0 1.2rem;
+  }
+  .stat {
+    background: #f7f5ef;
+    border-radius: 24px;
+    padding: 10px 6px;
+    text-align: center;
+    border: 1px solid #e4e1d6;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .stat:hover { transform: translateY(-2px); background: #ffffff; border-color: #ccc6b8; }
+  .stat-n {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e2b36;
+    font-family: 'Space Mono', monospace;
+  }
+  .stat-l {
+    font-size: 9px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #a09b8c;
+    margin-top: 3px;
+  }
+
+  /* 进度条 细腻 */
+  .prog-bg {
+    background: #e2dfd4;
+    border-radius: 40px;
+    height: 6px;
+    overflow: hidden;
+    margin: 8px 0 6px;
+  }
+  .prog-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #185FA5, #6d5dd6);
+    border-radius: 40px;
+    transition: width 0.45s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+    width: 0%;
+  }
+  .prog-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    font-weight: 500;
+    color: #878272;
+    margin-bottom: 1rem;
+  }
+  .end-info {
+    text-align: center;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    background: #f0ede5;
+    border-radius: 60px;
+    padding: 8px 12px;
+    margin-bottom: 1.2rem;
+    color: #4d4a40;
+    border: 1px solid #dbd6c9;
+    backdrop-filter: blur(2px);
+  }
+  .end-info strong {
+    color: #185FA5;
+    font-weight: 700;
+  }
+  .btn-reset {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid #dbd6c9;
+    border-radius: 44px;
+    padding: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b6658;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-reset:hover {
+    background: #e9e6de;
+    border-color: #185FA5;
+    color: #185FA5;
+    transform: scale(0.98);
+  }
+
+  /* 完成画面 绚烂 */
+  .done-body {
+    text-align: center;
+    padding: 3rem 1.8rem;
+    background: linear-gradient(145deg, #fcfbf9, #fff);
+    border-radius: 36px;
+  }
+  .done-icon {
+    font-size: 4.2rem;
+    margin-bottom: 0.75rem;
+    animation: bouncePop 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
+  }
+  @keyframes bouncePop {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .done-title {
+    font-size: 2.1rem;
+    font-weight: 800;
+    background: linear-gradient(125deg, #185FA5, #6942e0);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 0.5rem;
+  }
+  .done-sub {
+    font-size: 14px;
+    color: #6f6b60;
+    margin-bottom: 2rem;
+  }
+
+  /* dark mode 精致加强 */
+  @media (prefers-color-scheme: dark) {
+    body { background: #131313; background: radial-gradient(circle at 30% 20%, #1c1c1e, #0f0f10); }
+    body::before { background: radial-gradient(circle at 70% 20%, rgba(24,95,165,0.12), rgba(83,74,183,0.08)); }
+    .card { background: rgba(26, 26, 30, 0.94); backdrop-filter: blur(3px); border-color: #323237; box-shadow: 0 20px 35px -12px black; }
+    .main-title { background: linear-gradient(135deg, #cadcf0, #96b4dd); background-clip: text; -webkit-background-clip: text; color: transparent; }
+    .tabs { background: #202024; }
+    .tab { color: #9d9b92; }
+    .tab.active { background: #2c2c32; color: #6ca9f0; }
+    .field { background: #1e1e22; border-color: #3a3a40; color: #f2eee7; }
+    .stat { background: #1e1e22; border-color: #2f2f35; }
+    .stat-n { color: #efede5; }
+    .end-info { background: #1b1b1f; border-color: #323236; color: #b6b1a4; }
+    .btn-reset { border-color: #3a3a40; color: #b1ab9c; }
+    .btn-reset:hover { background: #2a2a2f; color: #7bb2f0; border-color: #6ca9f0; }
+    .prog-bg { background: #2c2c30; }
+    #rMins { fill: #efede5; }
+    .timer-tag { background: rgba(108,169,240,0.18); border-color: #3682cf; color: #7bb2f0; }
+    .badge { background: rgba(108,169,240,0.15); border-color: #2d6ead; color: #8ebaf5; }
+    .badge-dot { background: #6ca9f0; box-shadow: 0 0 6px #378add; }
+    .done-body { background: #202024; }
+    .done-sub { color: #aaa69b; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="badge"><span class="badge-dot"></span>Chronos</div>
-  <div class="main-title">Đếm <em>ngược</em></div>
+  <div class="badge"><span class="badge-dot"></span> CHRONOS · 永恒韵律</div>
+  <div class="main-title">倒计时 <em>流光</em></div>
 
-  <!-- Setup -->
+  <!-- 设置卡片 -->
   <div class="card" id="setupCard">
     <div class="card-body">
       <div class="tabs">
-        <button class="tab active" id="tabMin">Số phút</button>
-        <button class="tab" id="tabRange">Khung giờ</button>
+        <button class="tab active" id="tabMin">⌛ 分钟模式</button>
+        <button class="tab" id="tabRange">⏰ 时段模式</button>
       </div>
       <div id="minsPanel">
-        <label class="lbl">Nhập số phút</label>
-        <input class="field" type="number" id="minsInput" value="35" min="1" max="9999" placeholder="Ví dụ: 45">
-        <div class="hint">Từ 1 đến 9999 phút</div>
+        <label class="lbl">⏱️ 设定分钟</label>
+        <input class="field" type="number" id="minsInput" value="35" min="1" max="9999" placeholder="例如 25">
+        <div class="hint">✨ 范围 1 – 9999 分钟，任意时长</div>
       </div>
       <div id="rangePanel" style="display:none">
         <div class="time-row">
           <div>
-            <label class="lbl">Bắt đầu</label>
+            <label class="lbl">🌅 起始时间</label>
             <input class="field" type="time" id="fromTime" value="14:15">
           </div>
-          <div class="arrow-div">→</div>
+          <div class="arrow-div">⟶</div>
           <div>
-            <label class="lbl">Kết thúc</label>
+            <label class="lbl">🌇 结束时间</label>
             <input class="field" type="time" id="toTime" value="17:30">
           </div>
         </div>
-        <div class="hint">Tự động tính số phút chênh lệch</div>
+        <div class="hint">🎯 跨越午夜自动计算，最多48h内有效</div>
       </div>
       <div class="err" id="errMsg"></div>
-      <button class="btn-start" id="startBtn">▶ Bắt đầu</button>
+      <button class="btn-start" id="startBtn">✨ 启动计时 ✨</button>
     </div>
   </div>
 
-  <!-- Timer -->
+  <!-- 计时器卡片 -->
   <div class="card" id="timerCard" style="display:none">
     <div class="card-body">
       <div style="text-align:center">
-        <span class="timer-tag" id="timerTag">-- phút</span>
+        <span class="timer-tag" id="timerTag">⚡ 待命</span>
       </div>
       <div class="ring-wrap">
         <svg class="ring-svg" viewBox="0 0 220 220" width="220" height="220">
           <defs>
             <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#185FA5"/>
-              <stop offset="100%" stop-color="#534AB7"/>
+              <stop offset="60%" stop-color="#4B3BB8"/>
+              <stop offset="100%" stop-color="#8F73E6"/>
             </linearGradient>
           </defs>
           <circle class="ring-track" cx="110" cy="110" r="98" transform="rotate(-90 110 110)"/>
-          <circle class="ring-prog" id="ringProg" cx="110" cy="110" r="98"
-            transform="rotate(-90 110 110)" stroke="url(#rg)"
-            stroke-dasharray="615.75" stroke-dashoffset="0"/>
-          <text id="rMins" x="110" y="102" text-anchor="middle" font-size="46"
-            font-weight="600" fill="#111113" font-family="'Space Mono',monospace">00</text>
-          <text id="rUnit" x="110" y="122" text-anchor="middle" font-size="13"
-            fill="#888780" font-family="'Inter',sans-serif">phút</text>
-          <text id="rSecs" x="110" y="145" text-anchor="middle" font-size="14"
-            fill="#185FA5" font-family="'Space Mono',monospace">00 giây</text>
+          <circle class="ring-prog" id="ringProg" cx="110" cy="110" r="98" transform="rotate(-90 110 110)" stroke="url(#rg)" stroke-dasharray="615.75" stroke-dashoffset="0"/>
+          <text id="rMins" x="110" y="104" text-anchor="middle" font-size="48" font-weight="700" fill="#111" font-family="'Space Mono',monospace">00</text>
+          <text id="rUnit" x="110" y="124" text-anchor="middle" font-size="13" fill="#777" font-family="'Inter',sans-serif">分钟</text>
+          <text id="rSecs" x="110" y="148" text-anchor="middle" font-size="15" fill="#185FA5" font-family="'Space Mono',monospace" font-weight="600">00 秒</text>
         </svg>
       </div>
       <div class="stats">
-        <div class="stat"><div class="stat-n" id="sPct">0%</div><div class="stat-l">Đã qua</div></div>
-        <div class="stat"><div class="stat-n" id="sRem">--</div><div class="stat-l">Còn lại</div></div>
-        <div class="stat"><div class="stat-n" id="sTotal">--</div><div class="stat-l">Tổng</div></div>
+        <div class="stat"><div class="stat-n" id="sPct">0%</div><div class="stat-l">已流逝</div></div>
+        <div class="stat"><div class="stat-n" id="sRem">--</div><div class="stat-l">剩余时间</div></div>
+        <div class="stat"><div class="stat-n" id="sTotal">--</div><div class="stat-l">总时长</div></div>
       </div>
       <div class="prog-bg"><div class="prog-bar" id="progBar"></div></div>
-      <div class="prog-meta"><span id="progL">0% đã qua</span><span id="progR">-- giây còn</span></div>
-      <div class="end-info">Kết thúc lúc <strong id="endAt">--:--</strong></div>
-      <button class="btn-reset" id="resetBtn">↻ Đặt lại</button>
+      <div class="prog-meta"><span id="progL">0% 流逝</span><span id="progR">-- 秒剩余</span></div>
+      <div class="end-info">🏁 预计完成于 <strong id="endAt">--:--:--</strong></div>
+      <button class="btn-reset" id="resetBtn">↻ 重置倒计时</button>
     </div>
   </div>
 
-  <!-- Done -->
+  <!-- 完成卡片 美轮美奂 -->
   <div class="card" id="doneCard" style="display:none">
     <div class="done-body">
-      <div class="done-icon">🏆</div>
-      <div class="done-title">Hoàn thành!</div>
-      <div class="done-sub" id="doneMsg">Đếm ngược kết thúc thành công</div>
-      <button class="btn-start" id="doneResetBtn" style="max-width:220px;margin:0 auto;display:block">Làm lại</button>
+      <div class="done-icon">🎉✨🏆</div>
+      <div class="done-title">完美收官</div>
+      <div class="done-sub" id="doneMsg">时间交响曲 · 荣耀落幕</div>
+      <button class="btn-start" id="doneResetBtn" style="max-width:210px; margin:0 auto; display:block; background: linear-gradient(105deg, #2c5c8c, #5438bf);">♻️ 重新启程</button>
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  const CIRCUM=615.75;
-  let mode='mins',iv=null,target=null,total=null;
-  const $=id=>document.getElementById(id);
-  function fmtDur(ms){const s=Math.ceil(ms/1000),m=Math.floor(s/60),h=Math.floor(m/60);return h>0?h+'h '+(m%60)+'p':m+'p '+(s%60)+'s'}
-  function fmtTime(d){return d.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
-  function showOnly(id){['setupCard','timerCard','doneCard'].forEach(n=>$(n).style.display=n===id?'block':'none')}
-  function stopIv(){if(iv){clearInterval(iv);iv=null}}
-  function reset(){stopIv();target=null;total=null;showOnly('setupCard');$('errMsg').innerText=''}
-  function tick(){
-    const now=Date.now(),rem=target-now;
-    if(rem<=0){stopIv();$('doneMsg').innerText='Hoàn thành '+Math.round(total/60000)+' phút xuất sắc!';showOnly('doneCard');return}
-    const pct=Math.min(1,Math.max(0,(total-rem)/total)),pctInt=Math.round(pct*100);
-    const secLeft=Math.ceil(rem/1000),mLeft=Math.floor(secLeft/60),sOnly=secLeft%60;
-    $('rMins').textContent=String(mLeft).padStart(2,'0');
-    $('rSecs').textContent=String(sOnly).padStart(2,'0')+' giây';
-    $('ringProg').style.strokeDashoffset=String(CIRCUM*pct);
-    $('sPct').textContent=pctInt+'%';
-    $('sRem').textContent=fmtDur(rem);
-    $('progBar').style.width=pctInt+'%';
-    $('progL').textContent=pctInt+'% đã qua';
-    $('progR').textContent=secLeft+' giây còn';
+  const CIRCUM = 615.75;
+  let activeMode = 'mins';        // 'mins' or 'range'
+  let timerInterval = null;
+  let targetTimestamp = null;
+  let totalDurationMs = null;
+  
+  const DOM = {
+    setupCard: document.getElementById('setupCard'),
+    timerCard: document.getElementById('timerCard'),
+    doneCard: document.getElementById('doneCard'),
+    minsPanel: document.getElementById('minsPanel'),
+    rangePanel: document.getElementById('rangePanel'),
+    tabMin: document.getElementById('tabMin'),
+    tabRange: document.getElementById('tabRange'),
+    minsInput: document.getElementById('minsInput'),
+    fromTime: document.getElementById('fromTime'),
+    toTime: document.getElementById('toTime'),
+    errMsg: document.getElementById('errMsg'),
+    startBtn: document.getElementById('startBtn'),
+    resetBtn: document.getElementById('resetBtn'),
+    doneResetBtn: document.getElementById('doneResetBtn'),
+    timerTag: document.getElementById('timerTag'),
+    rMins: document.getElementById('rMins'),
+    rSecs: document.getElementById('rSecs'),
+    ringProg: document.getElementById('ringProg'),
+    sPct: document.getElementById('sPct'),
+    sRem: document.getElementById('sRem'),
+    sTotal: document.getElementById('sTotal'),
+    progBar: document.getElementById('progBar'),
+    progL: document.getElementById('progL'),
+    progR: document.getElementById('progR'),
+    endAt: document.getElementById('endAt')
+  };
+
+  function formatDurationHuman(ms) {
+    if (ms <= 0) return '0s';
+    const totalSec = Math.ceil(ms / 1000);
+    const hours = Math.floor(totalSec / 3600);
+    const minutes = Math.floor((totalSec % 3600) / 60);
+    const secs = totalSec % 60;
+    if (hours > 0) return `${hours}h ${minutes}m ${secs}s`;
+    if (minutes > 0) return `${minutes}m ${secs}s`;
+    return `${secs}s`;
   }
-  function launch(durMs,label,endDate){
-    if(durMs<=0){$('errMsg').innerText='Thời gian không hợp lệ';return}
-    stopIv();total=durMs;target=Date.now()+durMs;
-    $('timerTag').textContent=label;
-    $('sTotal').textContent=fmtDur(durMs);
-    $('endAt').textContent=fmtTime(endDate);
-    showOnly('timerCard');tick();
-    iv=setInterval(tick,250);
+
+  function formatClockTime(date) {
+    return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   }
-  function onStart(){
-    $('errMsg').innerText='';
-    if(mode==='mins'){
-      const m=parseInt($('minsInput').value);
-      if(isNaN(m)||m<1){$('errMsg').innerText='Nhập số phút hợp lệ (≥1)';return}
-      if(m>9999){$('errMsg').innerText='Tối đa 9999 phút';return}
-      launch(m*60000,m+' phút',new Date(Date.now()+m*60000));
-    } else {
-      const fv=$('fromTime').value,tv=$('toTime').value;
-      if(!fv||!tv){$('errMsg').innerText='Chọn đầy đủ thời gian';return}
-      const[fh,fm]=fv.split(':').map(Number),[th,tm]=tv.split(':').map(Number);
-      let a=fh*60+fm,b=th*60+tm;if(b<=a)b+=1440;
-      const diff=b-a;
-      if(diff<=0||diff>2880){$('errMsg').innerText='Khoảng thời gian không hợp lệ';return}
-      launch(diff*60000,fv+' → '+tv+' ('+diff+'p)',new Date(Date.now()+diff*60000));
+
+  function showOnlyCard(cardId) {
+    DOM.setupCard.style.display = 'none';
+    DOM.timerCard.style.display = 'none';
+    DOM.doneCard.style.display = 'none';
+    if (cardId === 'setup') DOM.setupCard.style.display = 'block';
+    if (cardId === 'timer') DOM.timerCard.style.display = 'block';
+    if (cardId === 'done') DOM.doneCard.style.display = 'block';
+  }
+
+  function stopTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
     }
   }
-  function setMode(m){
-    mode=m;
-    $('minsPanel').style.display=m==='mins'?'block':'none';
-    $('rangePanel').style.display=m==='range'?'block':'none';
-    $('tabMin').classList.toggle('active',m==='mins');
-    $('tabRange').classList.toggle('active',m==='range');
-    $('errMsg').innerText='';
+
+  function resetEverything() {
+    stopTimer();
+    targetTimestamp = null;
+    totalDurationMs = null;
+    showOnlyCard('setup');
+    DOM.errMsg.innerText = '';
   }
-  $('tabMin').onclick=()=>setMode('mins');
-  $('tabRange').onclick=()=>setMode('range');
-  $('startBtn').onclick=onStart;
-  $('resetBtn').onclick=reset;
-  $('doneResetBtn').onclick=reset;
+
+  // 计时器核心刷新（优雅动画）
+  function updateTimerDisplay() {
+    if (!targetTimestamp || !totalDurationMs) return;
+    const now = Date.now();
+    let remaining = targetTimestamp - now;
+    if (remaining <= 0) {
+      // 倒计时结束
+      stopTimer();
+      DOM.doneMsg.innerText = `🎉 辉煌完成 · 总计 ${Math.round(totalDurationMs / 60000)} 分钟 🎉`;
+      showOnlyCard('done');
+      return;
+    }
+
+    const elapsed = totalDurationMs - remaining;
+    const percent = Math.min(1, Math.max(0, elapsed / totalDurationMs));
+    const percentInt = Math.floor(percent * 100);
+
+    const remainingSec = Math.ceil(remaining / 1000);
+    const minsLeft = Math.floor(remainingSec / 60);
+    const secsLeft = remainingSec % 60;
+
+    // 更新环形进度
+    const offset = CIRCUM * (1 - percent);
+    DOM.ringProg.style.strokeDashoffset = offset;
+
+    // 更新数字及UI
+    DOM.rMins.textContent = String(minsLeft).padStart(2, '0');
+    DOM.rSecs.textContent = String(secsLeft).padStart(2, '0') + ' 秒';
+    DOM.sPct.textContent = percentInt + '%';
+    DOM.sRem.textContent = formatDurationHuman(remaining);
+    DOM.sTotal.textContent = formatDurationHuman(totalDurationMs);
+    DOM.progBar.style.width = percentInt + '%';
+    DOM.progL.textContent = percentInt + '% 已流逝';
+    DOM.progR.textContent = remainingSec + ' 秒 剩余';
+  }
+
+  function launchTimer(durationMs, labelText, endDateObj) {
+    if (durationMs <= 0) {
+      DOM.errMsg.innerText = '❌ 无效时长，请重新设定';
+      return false;
+    }
+    stopTimer();
+    totalDurationMs = durationMs;
+    targetTimestamp = Date.now() + durationMs;
+    DOM.timerTag.textContent = labelText;
+    DOM.endAt.textContent = formatClockTime(endDateObj);
+    // 预置显示
+    updateTimerDisplay();
+    showOnlyCard('timer');
+    timerInterval = setInterval(() => updateTimerDisplay(), 200);
+    return true;
+  }
+
+  function onStartFlow() {
+    DOM.errMsg.innerText = '';
+    if (activeMode === 'mins') {
+      let minsValue = parseInt(DOM.minsInput.value, 10);
+      if (isNaN(minsValue) || minsValue < 1) {
+        DOM.errMsg.innerText = '⏳ 请输入有效的分钟数 (≥1)';
+        return;
+      }
+      if (minsValue > 9999) {
+        DOM.errMsg.innerText = '🔁 分钟最大为 9999，保持合理区间';
+        return;
+      }
+      const duration = minsValue * 60000;
+      const endDate = new Date(Date.now() + duration);
+      launchTimer(duration, `${minsValue} 分钟 · 专注之旅`, endDate);
+    } 
+    else { // range模式：区间时段
+      const fromVal = DOM.fromTime.value;
+      const toVal = DOM.toTime.value;
+      if (!fromVal || !toVal) {
+        DOM.errMsg.innerText = '🌙 请完整填写起止时间';
+        return;
+      }
+      let [fromHour, fromMin] = fromVal.split(':').map(Number);
+      let [toHour, toMin] = toVal.split(':').map(Number);
+      let fromTotal = fromHour * 60 + fromMin;
+      let toTotal = toHour * 60 + toMin;
+      if (toTotal <= fromTotal) toTotal += 1440; // 跨午夜逻辑
+      let diffMinutes = toTotal - fromTotal;
+      if (diffMinutes <= 0 || diffMinutes > 2880) {
+        DOM.errMsg.innerText = '⛔ 时段须大于0分钟且不超过48小时';
+        return;
+      }
+      const durationMs = diffMinutes * 60000;
+      const endDate = new Date(Date.now() + durationMs);
+      const label = `${fromVal} → ${toVal}  (${diffMinutes}分)`;
+      launchTimer(durationMs, label, endDate);
+    }
+  }
+
+  function setActiveMode(mode) {
+    activeMode = mode;
+    if (mode === 'mins') {
+      DOM.minsPanel.style.display = 'block';
+      DOM.rangePanel.style.display = 'none';
+      DOM.tabMin.classList.add('active');
+      DOM.tabRange.classList.remove('active');
+    } else {
+      DOM.minsPanel.style.display = 'none';
+      DOM.rangePanel.style.display = 'block';
+      DOM.tabMin.classList.remove('active');
+      DOM.tabRange.classList.add('active');
+    }
+    DOM.errMsg.innerText = '';
+  }
+
+  // 事件绑定
+  DOM.tabMin.addEventListener('click', () => setActiveMode('mins'));
+  DOM.tabRange.addEventListener('click', () => setActiveMode('range'));
+  DOM.startBtn.addEventListener('click', onStartFlow);
+  DOM.resetBtn.addEventListener('click', resetEverything);
+  DOM.doneResetBtn.addEventListener('click', resetEverything);
+
+  // 初始默认分钟模式展示，设定默认下午时段展示友好
+  setActiveMode('mins');
+  // 设置time默认语义化
+  if(DOM.fromTime) DOM.fromTime.value = "14:15";
+  if(DOM.toTime) DOM.toTime.value = "17:30";
+  // 初始化环形偏移为0
+  DOM.ringProg.style.strokeDashoffset = "0";
 })();
 </script>
 </body>
