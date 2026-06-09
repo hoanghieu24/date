@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>MORPH | Đồng Hồ Đếm Ngược Đương Đại</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<title>ECHO | Đồng Hồ Đếm Ngược Động Lực</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * {
   margin: 0;
@@ -14,8 +14,8 @@
 }
 
 body {
-  background: #0a0a0f;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #05050f;
+  font-family: 'Inter', 'Space Grotesk', sans-serif;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -24,76 +24,110 @@ body {
   overflow-x: hidden;
 }
 
-/* Nền gradient động */
-.bg-aura {
+/* Nền động */
+.bg-pulse {
   position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse at 30% 40%, #1a1a2e 0%, #0a0a0f 100%);
+  background: radial-gradient(ellipse at 50% 40%, #0f0f1f 0%, #020208 100%);
+  z-index: -3;
+}
+
+.waves {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: -2;
+  opacity: 0.4;
+  pointer-events: none;
 }
 
-.bg-glow {
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background: repeating-linear-gradient(transparent 0px, transparent 30px, rgba(0, 212, 255, 0.05) 30px, rgba(0, 212, 255, 0.08) 32px);
+  animation: waveMove 8s linear infinite;
+}
+
+.wave2 {
+  height: 80px;
+  opacity: 0.5;
+  animation-duration: 12s;
+  animation-direction: reverse;
+  background: repeating-linear-gradient(transparent 0px, transparent 25px, rgba(168, 85, 247, 0.06) 25px, rgba(168, 85, 247, 0.1) 28px);
+}
+
+@keyframes waveMove {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); background-position: 100% 0; }
+}
+
+/* Hạt ánh sáng bay */
+.particle-field {
   position: fixed;
-  width: 80vw;
-  height: 80vw;
-  background: radial-gradient(circle, rgba(0, 200, 255, 0.15) 0%, rgba(0, 200, 255, 0) 70%);
-  top: -30vh;
-  right: -30vw;
-  border-radius: 50%;
+  inset: 0;
   z-index: -1;
-  filter: blur(80px);
-  animation: float 18s infinite alternate;
+  pointer-events: none;
 }
 
-.bg-glow-2 {
-  position: fixed;
-  width: 70vw;
-  height: 70vw;
-  background: radial-gradient(circle, rgba(180, 100, 255, 0.12) 0%, rgba(180, 100, 255, 0) 70%);
-  bottom: -40vh;
-  left: -20vw;
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #00d4ff;
   border-radius: 50%;
-  z-index: -1;
-  filter: blur(90px);
-  animation: float 22s infinite alternate-reverse;
+  opacity: 0;
+  animation: floatParticle 6s infinite ease-in-out;
 }
 
-@keyframes float {
-  0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
-  100% { transform: translate(3%, 5%) scale(1.2); opacity: 0.8; }
+@keyframes floatParticle {
+  0% { opacity: 0; transform: translateY(100vh) scale(0); }
+  20% { opacity: 0.8; }
+  80% { opacity: 0.5; }
+  100% { opacity: 0; transform: translateY(-20vh) scale(1.5); }
 }
 
-/* Container chính - cân đối hoàn hảo */
+/* Container chính - CĂN GIỮA TUYỆT ĐỐI */
 .app {
   position: relative;
-  z-index: 10;
+  z-index: 20;
   width: 100%;
-  max-width: 560px;
-  margin: 1.5rem;
-  padding: 0;
+  max-width: 520px;
+  margin: 1rem auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh;
 }
 
-/* Header tối giản đẹp */
+/* Header */
 .header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  animation: fadeInDown 0.6s ease;
 }
 
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 212, 255, 0.08);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 100px;
-  padding: 0.4rem 1.2rem;
+  padding: 0.35rem 1.2rem;
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.2em;
-  color: #a0a0b0;
+  color: #00d4ff;
   text-transform: uppercase;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
 }
 
 .badge-dot {
@@ -101,25 +135,29 @@ body {
   height: 6px;
   background: #00d4ff;
   border-radius: 50%;
-  box-shadow: 0 0 8px #00d4ff;
-  animation: pulse 1.5s infinite;
+  animation: pulseDot 1.2s infinite;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.4; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.2); }
+@keyframes pulseDot {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); box-shadow: 0 0 0 0 #00d4ff; }
+  50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 0 4px rgba(0,212,255,0.3); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .title {
-  font-size: clamp(3rem, 12vw, 5.5rem);
+  font-size: clamp(2.8rem, 10vw, 4.5rem);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   line-height: 1.1;
 }
 
 .title-top {
   display: block;
-  color: #e8e8f0;
+  color: #e0e0f0;
   font-weight: 600;
 }
 
@@ -129,52 +167,59 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-weight: 700;
+  font-weight: 800;
 }
 
-/* Card chính - glassmorphism tinh tế */
+/* Card - Glassmorphism */
 .card {
-  background: rgba(18, 18, 28, 0.7);
+  background: rgba(12, 12, 22, 0.75);
   backdrop-filter: blur(20px);
   border-radius: 2.5rem;
   border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  overflow: hidden;
+  box-shadow: 0 25px 45px -20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  width: 100%;
   transition: all 0.3s ease;
+  animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .card-inner {
-  padding: 1.8rem;
+  padding: 1.6rem;
 }
 
 /* Tabs */
 .tabs {
   display: flex;
   gap: 0.5rem;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.4);
   padding: 0.3rem;
   border-radius: 2rem;
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.5rem;
 }
 
 .tab {
   flex: 1;
   background: transparent;
   border: none;
-  padding: 0.7rem 0.5rem;
+  padding: 0.65rem 0.3rem;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 0.8rem;
   border-radius: 1.8rem;
-  color: #8a8a9e;
+  color: #8a8aa0;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s;
 }
 
 .tab.active {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 212, 255, 0.12);
   color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 0.5px solid rgba(0, 212, 255, 0.3);
 }
 
 /* Inputs */
@@ -187,19 +232,19 @@ body {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #8a8a9e;
+  color: #8a8aa0;
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .input-field {
   width: 100%;
-  background: rgba(10, 10, 18, 0.9);
+  background: rgba(5, 5, 15, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 1.2rem;
-  padding: 0.9rem 1.2rem;
+  padding: 0.85rem 1rem;
   color: white;
-  font-family: 'Inter', monospace;
+  font-family: 'Space Grotesk', monospace;
   font-size: 1rem;
   font-weight: 500;
   text-align: center;
@@ -209,7 +254,6 @@ body {
 
 .input-field:focus {
   border-color: #00d4ff;
-  background: rgba(10, 10, 18, 1);
   box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
 }
 
@@ -220,20 +264,25 @@ body {
 }
 
 .time-arrow {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color: #00d4ff;
   margin-bottom: 0.2rem;
-  font-weight: 300;
+  animation: arrowPulse 1.5s infinite;
 }
 
-.hint-text {
+@keyframes arrowPulse {
+  0%, 100% { transform: translateX(0); opacity: 0.6; }
+  50% { transform: translateX(3px); opacity: 1; }
+}
+
+.hint {
   font-size: 0.65rem;
-  color: #6a6a7e;
+  color: #6a6a80;
   text-align: center;
   margin-top: 0.5rem;
 }
 
-.error-msg {
+.error {
   min-height: 2rem;
   font-size: 0.7rem;
   text-align: center;
@@ -241,13 +290,13 @@ body {
   margin-top: 0.5rem;
 }
 
-/* Button chính */
+/* Button */
 .btn-primary {
   width: 100%;
   background: linear-gradient(95deg, #00d4ff, #0099cc);
   border: none;
   border-radius: 1.8rem;
-  padding: 1rem;
+  padding: 0.9rem;
   font-weight: 600;
   font-size: 0.9rem;
   letter-spacing: 0.05em;
@@ -256,43 +305,55 @@ body {
   cursor: pointer;
   margin-top: 1rem;
   transition: all 0.25s;
-  box-shadow: 0 4px 14px rgba(0, 212, 255, 0.25);
+  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.25);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
   filter: brightness(1.05);
-  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.35);
+  box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
 }
 
-/* Timer display */
-.timer-label {
-  text-align: center;
-  margin-bottom: 1.2rem;
+.btn-primary:active {
+  transform: translateY(1px);
 }
 
+/* ========== TIMER DISPLAY ========== */
 .timer-badge {
   display: inline-block;
   background: rgba(0, 212, 255, 0.1);
-  border: 1px solid rgba(0, 212, 255, 0.2);
+  border: 1px solid rgba(0, 212, 255, 0.25);
   border-radius: 2rem;
   padding: 0.4rem 1.2rem;
   font-size: 0.7rem;
   font-weight: 500;
   color: #00d4ff;
+  margin-bottom: 1rem;
+  animation: glowPulse 2s infinite;
 }
 
-/* Vòng tròn đếm ngược */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0px rgba(0,212,255,0.2); border-color: rgba(0,212,255,0.25); }
+  50% { box-shadow: 0 0 12px rgba(0,212,255,0.3); border-color: rgba(0,212,255,0.6); }
+}
+
+/* Ring center */
 .ring-area {
   display: flex;
   justify-content: center;
-  margin: 1rem 0 1.2rem;
+  margin: 0.5rem 0 0.8rem;
 }
 
 .ring {
   position: relative;
-  width: 260px;
-  height: 260px;
+  width: 250px;
+  height: 250px;
+  animation: ringFloat 3s ease-in-out infinite;
+}
+
+@keyframes ringFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
 .ring-svg {
@@ -313,14 +374,14 @@ body {
   stroke: url(#ringGradient);
   stroke-width: 8;
   stroke-linecap: round;
-  transition: stroke-dashoffset 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  transition: stroke-dashoffset 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
 .ring-glow {
   fill: none;
-  stroke: rgba(0, 212, 255, 0.2);
+  stroke: rgba(0, 212, 255, 0.25);
   stroke-width: 14;
-  filter: blur(4px);
+  filter: blur(5px);
   stroke-linecap: round;
 }
 
@@ -334,32 +395,39 @@ body {
 }
 
 .ring-number {
-  font-family: 'Inter', monospace;
-  font-weight: 700;
-  font-size: 4.2rem;
-  background: linear-gradient(145deg, #ffffff, #a0f0ff);
+  font-family: 'Space Grotesk', monospace;
+  font-weight: 800;
+  font-size: 4rem;
+  background: linear-gradient(145deg, #ffffff, #80eaff);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1;
+  animation: numberPop 0.5s ease;
+}
+
+@keyframes numberPop {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .ring-unit {
   font-size: 0.7rem;
   font-weight: 500;
-  color: #8a8a9e;
-  margin-top: -4px;
+  color: #8a8aa0;
+  margin-top: -5px;
 }
 
 .second-pill {
   text-align: center;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 212, 255, 0.08);
   border-radius: 2rem;
   padding: 0.4rem 1rem;
   width: fit-content;
   margin: 0 auto 1rem;
   font-size: 0.8rem;
-  color: #b0b0c0;
+  color: #b0b0c8;
+  animation: fadeScale 0.4s ease;
 }
 
 .second-pill strong {
@@ -367,43 +435,54 @@ body {
   font-size: 1rem;
 }
 
+@keyframes fadeScale {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 /* Stats grid */
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.7rem;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
 }
 
 .stat-item {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.35);
   border-radius: 1.2rem;
   padding: 0.7rem 0.2rem;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.2s;
+}
+
+.stat-item:hover {
+  background: rgba(0, 212, 255, 0.05);
+  transform: translateY(-2px);
 }
 
 .stat-num {
   font-size: 1.2rem;
   font-weight: 700;
-  font-family: monospace;
+  font-family: 'Space Grotesk', monospace;
   color: white;
 }
 
 .stat-label {
   font-size: 0.6rem;
   text-transform: uppercase;
-  color: #8a8a9e;
+  color: #8a8aa0;
   letter-spacing: 0.5px;
 }
 
-/* Progress bar */
+/* Progress */
 .progress {
   background: rgba(255, 255, 255, 0.06);
   border-radius: 20px;
   height: 5px;
   overflow: hidden;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .progress-bar {
@@ -411,14 +490,14 @@ body {
   height: 100%;
   background: linear-gradient(90deg, #00d4ff, #a855f7);
   border-radius: 20px;
-  transition: width 0.35s ease;
+  transition: width 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
 .progress-meta {
   display: flex;
   justify-content: space-between;
   font-size: 0.6rem;
-  color: #6a6a7e;
+  color: #6a6a80;
   margin-bottom: 1rem;
 }
 
@@ -430,7 +509,13 @@ body {
   border-radius: 2rem;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  color: #a0a0b0;
+  color: #a0a0b8;
+  animation: fadeSlide 0.4s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .endtime-info strong {
@@ -439,12 +524,12 @@ body {
 
 .btn-outline {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 2rem;
-  padding: 0.7rem 1.5rem;
+  padding: 0.65rem 1.2rem;
   font-size: 0.8rem;
   font-weight: 500;
-  color: #d0d0e0;
+  color: #c0c0d8;
   cursor: pointer;
   transition: all 0.2s;
   width: 100%;
@@ -453,21 +538,28 @@ body {
 .btn-outline:hover {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(0, 212, 255, 0.4);
+  transform: scale(1.01);
 }
 
-/* Done panel */
+/* Done screen */
 .done-screen {
   text-align: center;
-  padding: 1rem 0;
+  padding: 0.5rem 0;
 }
 
 .done-icon {
   font-size: 4rem;
   margin-bottom: 0.5rem;
+  animation: bounceCelebrate 0.8s ease;
+}
+
+@keyframes bounceCelebrate {
+  0%, 100% { transform: scale(0.9); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 1; }
 }
 
 .done-title {
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: 700;
   background: linear-gradient(135deg, #ffffff, #00d4ff);
   -webkit-background-clip: text;
@@ -476,31 +568,20 @@ body {
   margin-bottom: 0.5rem;
 }
 
-.done-message {
-  color: #8a8a9e;
-  font-size: 0.85rem;
-  margin-bottom: 1.5rem;
-}
-
 /* Responsive */
 @media (max-width: 480px) {
-  .card-inner {
-    padding: 1.2rem;
-  }
-  .ring {
-    width: 220px;
-    height: 220px;
-  }
-  .ring-number {
-    font-size: 3.2rem;
-  }
+  .card-inner { padding: 1.2rem; }
+  .ring { width: 210px; height: 210px; }
+  .ring-number { font-size: 3.2rem; }
+  .stats { gap: 0.5rem; }
+  .stat-num { font-size: 1rem; }
 }
 </style>
 </head>
 <body>
-<div class="bg-aura"></div>
-<div class="bg-glow"></div>
-<div class="bg-glow-2"></div>
+<div class="bg-pulse"></div>
+<div class="waves"><div class="wave"></div><div class="wave wave2"></div></div>
+<div class="particle-field" id="particles"></div>
 
 <div class="app">
   <div class="header">
@@ -514,49 +595,45 @@ body {
     </div>
   </div>
 
-  <!-- Panel cài đặt -->
+  <!-- Setup Panel -->
   <div id="setupPanel" class="card">
     <div class="card-inner">
       <div class="tabs">
-        <button class="tab active" id="tabMinutes">Số phút</button>
-        <button class="tab" id="tabRange">Khung giờ</button>
+        <button class="tab active" id="tabMinutes">SỐ PHÚT</button>
+        <button class="tab" id="tabRange">KHUNG GIỜ</button>
       </div>
-
       <div id="minutesMode">
         <div class="input-group">
-          <div class="input-label">Nhập số phút</div>
-          <input type="number" id="minutesInput" class="input-field" value="30" placeholder="Ví dụ: 45">
+          <div class="input-label">📌 NHẬP SỐ PHÚT</div>
+          <input type="number" id="minutesInput" class="input-field" value="35" placeholder="Ví dụ: 45">
         </div>
-        <div class="hint-text">Từ 1 đến 9999 phút</div>
+        <div class="hint">⏱️ Từ 1 đến 9999 phút</div>
       </div>
-
       <div id="rangeMode" style="display: none;">
         <div class="time-row">
-          <div class="input-group" style="flex: 1">
-            <div class="input-label">Bắt đầu</div>
-            <input type="time" id="startTime" class="input-field" value="14:30">
+          <div class="input-group" style="flex:1">
+            <div class="input-label">BẮT ĐẦU</div>
+            <input type="time" id="startTime" class="input-field" value="14:15">
           </div>
           <div class="time-arrow">→</div>
-          <div class="input-group" style="flex: 1">
-            <div class="input-label">Kết thúc</div>
-            <input type="time" id="endTime" class="input-field" value="16:00">
+          <div class="input-group" style="flex:1">
+            <div class="input-label">KẾT THÚC</div>
+            <input type="time" id="endTime" class="input-field" value="17:30">
           </div>
         </div>
-        <div class="hint-text">Tự động tính khoảng thời gian</div>
+        <div class="hint">✨ Tự động tính số phút chênh lệch</div>
       </div>
-
-      <div id="errorMsg" class="error-msg"></div>
-      <button class="btn-primary" id="startBtn">Bắt đầu</button>
+      <div id="errorMsg" class="error"></div>
+      <button class="btn-primary" id="startBtn">▶ BẮT ĐẦU</button>
     </div>
   </div>
 
-  <!-- Panel đếm ngược -->
+  <!-- Timer Panel -->
   <div id="timerPanel" class="card" style="display: none;">
     <div class="card-inner">
-      <div class="timer-label">
+      <div style="text-align: center;">
         <span class="timer-badge" id="timerTag">-- phút</span>
       </div>
-
       <div class="ring-area">
         <div class="ring">
           <svg class="ring-svg" viewBox="0 0 260 260" width="260" height="260">
@@ -576,11 +653,9 @@ body {
           </div>
         </div>
       </div>
-
       <div class="second-pill">
         ⏱️ còn <strong id="remainSeconds">00</strong> giây
       </div>
-
       <div class="stats">
         <div class="stat-item">
           <div class="stat-num" id="percentVal">0%</div>
@@ -595,36 +670,46 @@ body {
           <div class="stat-label">tổng</div>
         </div>
       </div>
-
       <div class="progress">
         <div class="progress-bar" id="progressFill"></div>
       </div>
       <div class="progress-meta">
-        <span id="progressLeft">0%</span>
+        <span id="progressLeft">0% đã qua</span>
         <span id="progressRight">-- giây còn</span>
       </div>
-
       <div class="endtime-info">
         🎯 Kết thúc lúc <strong id="endTimeHuman">--:--:--</strong>
       </div>
-
-      <button class="btn-outline" id="resetBtn">↻ Đặt lại</button>
+      <button class="btn-outline" id="resetBtn">↻ ĐẶT LẠI</button>
     </div>
   </div>
 
-  <!-- Panel hoàn thành -->
+  <!-- Done Panel -->
   <div id="donePanel" class="card" style="display: none;">
     <div class="card-inner done-screen">
-      <div class="done-icon">✨🎉✨</div>
-      <div class="done-title">Hoàn thành</div>
-      <div class="done-message" id="doneMsg">Đếm ngược đã kết thúc</div>
-      <button class="btn-primary" id="doneResetBtn">Làm lại</button>
+      <div class="done-icon">🎉✨🏆</div>
+      <div class="done-title">HOÀN THÀNH</div>
+      <div class="hint" id="doneMsg" style="margin-bottom: 1rem;">Đếm ngược kết thúc xuất sắc</div>
+      <button class="btn-primary" id="doneResetBtn">LÀM LẠI</button>
     </div>
   </div>
 </div>
 
 <script>
 (function() {
+  // Tạo hạt bay
+  const particles = document.getElementById('particles');
+  for(let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDelay = Math.random() * 8 + 's';
+    p.style.animationDuration = 4 + Math.random() * 5 + 's';
+    p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+    p.style.background = Math.random() > 0.7 ? '#a855f7' : '#00d4ff';
+    particles.appendChild(p);
+  }
+
   // DOM
   const setupDiv = document.getElementById('setupPanel');
   const timerDiv = document.getElementById('timerPanel');
@@ -641,7 +726,6 @@ body {
   const resetBtn = document.getElementById('resetBtn');
   const doneResetBtn = document.getElementById('doneResetBtn');
   
-  // Timer elements
   const timerTag = document.getElementById('timerTag');
   const remainMinutesSpan = document.getElementById('remainMinutes');
   const remainSecondsSpan = document.getElementById('remainSeconds');
@@ -656,18 +740,14 @@ body {
   const ringGlow = document.getElementById('ringGlow');
   const doneMsgSpan = document.getElementById('doneMsg');
   
-  const CIRCUM = 722.566; // 2 * PI * 115
-  
+  const CIRCUM = 722.566;
   let activeMode = 'minutes';
   let timerInterval = null;
   let targetTime = null;
   let totalDuration = null;
   
   function stopTimer() {
-    if (timerInterval) {
-      clearInterval(timerInterval);
-      timerInterval = null;
-    }
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   }
   
   function resetToSetup() {
@@ -717,21 +797,19 @@ body {
   
   function startCountdown() {
     if (!targetTime || !totalDuration) return;
-    
     function tick() {
       const now = Date.now();
       const remaining = targetTime - now;
       if (remaining <= 0) {
         stopTimer();
         const totalMins = Math.round(totalDuration / 60000);
-        doneMsgSpan.innerText = `✅ ${totalMins} phút đã trôi qua thành công!`;
+        doneMsgSpan.innerText = `✅ ${totalMins} phút đã trôi qua!`;
         timerDiv.style.display = 'none';
         doneDiv.style.display = 'flex';
         return;
       }
       updateDisplay(remaining);
     }
-    
     tick();
     timerInterval = setInterval(tick, 200);
   }
@@ -747,11 +825,9 @@ body {
     timerTag.innerText = label;
     totalStatSpan.innerText = formatDuration(durationMs);
     endTimeHuman.innerText = endDate.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    
     setupDiv.style.display = 'none';
     timerDiv.style.display = 'flex';
     doneDiv.style.display = 'none';
-    
     startCountdown();
     return true;
   }
@@ -760,34 +836,22 @@ body {
     errorMsg.innerText = '';
     if (activeMode === 'minutes') {
       let mins = parseInt(minutesInput.value);
-      if (isNaN(mins) || mins < 1) {
-        errorMsg.innerText = '⚠️ Vui lòng nhập số phút hợp lệ (≥ 1)';
-        return;
-      }
-      if (mins > 9999) {
-        errorMsg.innerText = '⚠️ Số phút tối đa là 9999';
-        return;
-      }
+      if (isNaN(mins) || mins < 1) { errorMsg.innerText = '⚠️ Nhập số phút hợp lệ (≥ 1)'; return; }
+      if (mins > 9999) { errorMsg.innerText = '⚠️ Tối đa 9999 phút'; return; }
       const duration = mins * 60000;
       const endDate = new Date(Date.now() + duration);
       launchTimer(duration, `${mins} phút`, endDate);
     } else {
       const fromVal = startTime.value;
       const toVal = endTime.value;
-      if (!fromVal || !toVal) {
-        errorMsg.innerText = '⚠️ Chọn đầy đủ thời gian';
-        return;
-      }
+      if (!fromVal || !toVal) { errorMsg.innerText = '⚠️ Chọn đầy đủ thời gian'; return; }
       let [fh, fm] = fromVal.split(':').map(Number);
       let [th, tm] = toVal.split(':').map(Number);
       let fromTotal = fh * 60 + fm;
       let toTotal = th * 60 + tm;
       if (toTotal <= fromTotal) toTotal += 1440;
       let diffMins = toTotal - fromTotal;
-      if (diffMins <= 0 || diffMins > 2880) {
-        errorMsg.innerText = '⚠️ Khoảng thời gian không hợp lệ (tối đa 48 giờ)';
-        return;
-      }
+      if (diffMins <= 0 || diffMins > 2880) { errorMsg.innerText = '⚠️ Khoảng thời gian không hợp lệ'; return; }
       const duration = diffMins * 60000;
       const endDate = new Date(Date.now() + duration);
       launchTimer(duration, `${fromVal} → ${toVal} (${diffMins} phút)`, endDate);
@@ -810,18 +874,16 @@ body {
     errorMsg.innerText = '';
   }
   
-  // Events
   tabMinutes.addEventListener('click', () => setMode('minutes'));
   tabRange.addEventListener('click', () => setMode('range'));
   startBtn.addEventListener('click', onStart);
   resetBtn.addEventListener('click', resetToSetup);
   doneResetBtn.addEventListener('click', resetToSetup);
   
-  // Set defaults
   setMode('minutes');
-  minutesInput.value = '25';
-  startTime.value = '09:00';
-  endTime.value = '10:30';
+  minutesInput.value = '35';
+  startTime.value = '14:15';
+  endTime.value = '17:30';
 })();
 </script>
 </body>
