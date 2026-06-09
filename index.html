@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Chronos — 优雅倒计时 | 动态美学</title>
+<title>Chronos — Đồng Hồ Đếm Ngược Sang Trọng</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   * {
     margin: 0;
@@ -15,7 +15,7 @@
   }
 
   body {
-    background: linear-gradient(145deg, #f1efe7 0%, #e8e5da 100%);
+    background: radial-gradient(ellipse at 20% 30%, #f3f0e8, #e2dfd3);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -23,511 +23,515 @@
     font-family: 'Inter', sans-serif;
     padding: 1.5rem;
     position: relative;
-    transition: background 0.4s ease;
+    transition: background 0.4s;
   }
 
-  /* 动态粒子光晕背景 (华丽氛围) */
+  /* Hiệu ứng ánh sáng lung linh */
   body::before {
     content: "";
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 20% 40%, rgba(24,95,165,0.08) 0%, rgba(83,74,183,0.05) 80%);
+    inset: 0;
+    background: radial-gradient(circle at 70% 10%, rgba(24,95,165,0.12) 0%, rgba(83,74,183,0.06) 70%);
     pointer-events: none;
     z-index: 0;
   }
 
+  body::after {
+    content: "";
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,245,0.2) 0%, rgba(255,255,245,0) 60%);
+    animation: shimmerSlow 18s infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes shimmerSlow {
+    0% { opacity: 0.2; transform: translate(0,0); }
+    100% { opacity: 0.5; transform: translate(5%, 5%); }
+  }
+
   .wrap {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0;
     width: 100%;
-    max-width: 480px;
-    animation: floatIn 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    max-width: 500px;
+    animation: fadeSlideUp 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.2);
   }
 
-  @keyframes floatIn {
-    0% { opacity: 0; transform: translateY(25px) scale(0.97); }
+  @keyframes fadeSlideUp {
+    0% { opacity: 0; transform: translateY(30px) scale(0.96); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  /* 精致徽章 */
+  /* Huy hiệu sang trọng */
   .badge {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     background: rgba(24, 95, 165, 0.12);
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(24, 95, 165, 0.35);
-    border-radius: 80px;
-    padding: 6px 18px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(24, 95, 165, 0.4);
+    border-radius: 100px;
+    padding: 6px 22px;
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #185FA5;
+    color: #1a5a9c;
     margin-bottom: 1rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   }
   .badge-dot {
-    width: 7px;
-    height: 7px;
-    background: #185FA5;
+    width: 8px;
+    height: 8px;
+    background: #1e6eb5;
     border-radius: 50%;
-    box-shadow: 0 0 5px #378add;
-    animation: pulseGlow 1.6s infinite ease-in-out;
+    box-shadow: 0 0 6px #3c8fd9;
+    animation: nhapNhay 1.5s infinite ease;
   }
-  @keyframes pulseGlow {
-    0%, 100% { opacity: 0.4; transform: scale(0.8); box-shadow: 0 0 0px #185FA5; }
-    50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 8px #378add; }
+  @keyframes nhapNhay {
+    0%, 100% { opacity: 0.4; transform: scale(0.7); }
+    50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 12px #3c8fd9; }
   }
 
   .main-title {
-    font-size: clamp(2.4rem, 10vw, 3.8rem);
-    font-weight: 700;
+    font-size: clamp(2.5rem, 11vw, 4rem);
+    font-weight: 800;
     text-align: center;
     line-height: 1.1;
     margin-bottom: 1.8rem;
-    color: #121212;
-    letter-spacing: -0.03em;
-    background: linear-gradient(135deg, #0F2B3D, #1C4E6E);
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #0f2e42, #1f5a85, #3b2b9e);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.05);
   }
   .main-title em {
     font-style: normal;
-    background: linear-gradient(145deg, #185FA5, #5A4BCF);
+    background: linear-gradient(145deg, #2273b9, #6f55e0);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
     font-weight: 800;
   }
 
-  /* 卡片光泽+动态阴影 */
+  /* Thẻ chính */
   .card {
-    background: rgba(255, 255, 250, 0.96);
-    backdrop-filter: blur(2px);
-    border-radius: 36px;
-    box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.7);
-    border: 1px solid rgba(255,255,235,0.7);
+    background: rgba(255, 255, 250, 0.95);
+    backdrop-filter: blur(4px);
+    border-radius: 48px;
+    box-shadow: 0 30px 50px -18px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255,255,240,0.8);
+    border: 1px solid rgba(255, 250, 225, 0.9);
     width: 100%;
     overflow: hidden;
-    transition: transform 0.25s ease, box-shadow 0.3s;
+    transition: all 0.3s ease;
   }
   .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 30px 50px -16px rgba(0, 0, 0, 0.25);
+    transform: translateY(-3px);
+    box-shadow: 0 35px 55px -18px rgba(0, 0, 0, 0.3);
   }
 
   .card-body {
-    padding: 1.8rem;
+    padding: 2rem 1.8rem;
   }
 
-  /* 优雅选项卡 */
+  /* Tab lung linh */
   .tabs {
     display: flex;
-    background: #f1efe2;
-    border-radius: 60px;
-    overflow: hidden;
-    margin-bottom: 1.8rem;
-    padding: 4px;
-    gap: 4px;
-    background: #e9e7dd;
+    background: #ece9df;
+    border-radius: 80px;
+    padding: 5px;
+    gap: 8px;
+    margin-bottom: 2rem;
   }
   .tab {
     flex: 1;
     background: transparent;
     border: none;
-    padding: 12px 8px;
+    padding: 12px 6px;
     font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+    font-weight: 700;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     font-family: 'Inter', sans-serif;
-    border-radius: 40px;
+    border-radius: 60px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    color: #5e5b52;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.4, 1.1);
+    color: #706b5c;
   }
   .tab.active {
-    background: white;
-    color: #185FA5;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background: #ffffff;
+    color: #1a6cb6;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
   }
 
-  /* 输入域新美学 */
   .lbl {
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: #7a7568;
-    margin-bottom: 6px;
+    letter-spacing: 0.14em;
+    color: #8e8878;
+    margin-bottom: 8px;
     display: block;
   }
   .field {
     width: 100%;
-    background: #fdfcf8;
-    border: 1.5px solid #e2dfd4;
-    border-radius: 28px;
-    padding: 12px 20px;
+    background: #fefcf7;
+    border: 1.5px solid #e7e3d7;
+    border-radius: 34px;
+    padding: 14px 20px;
     font-size: 1rem;
     font-weight: 500;
     text-align: center;
     outline: none;
-    transition: all 0.2s;
+    transition: all 0.25s;
     font-family: 'Space Mono', monospace;
-    color: #1e2a36;
+    color: #1f2e3a;
   }
   .field:focus {
-    border-color: #185FA5;
-    box-shadow: 0 0 0 4px rgba(24, 95, 165, 0.2);
+    border-color: #2273b9;
+    box-shadow: 0 0 0 5px rgba(34,115,185,0.2);
     background: white;
   }
+
   .time-row {
     display: flex;
-    gap: 12px;
+    gap: 14px;
     align-items: flex-end;
   }
   .time-row > div { flex: 1; }
   .arrow-div {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 300;
-    color: #88847a;
-    padding-bottom: 10px;
+    color: #9b9688;
+    padding-bottom: 12px;
   }
   .hint {
     font-size: 10px;
-    color: #989588;
+    color: #aaa495;
     text-align: center;
-    margin-top: 8px;
+    margin-top: 10px;
+    font-weight: 500;
   }
   .err {
-    min-height: 28px;
+    min-height: 32px;
     font-size: 11px;
-    font-weight: 500;
-    color: #e06565;
+    font-weight: 600;
+    color: #dc6a6a;
     text-align: center;
-    margin: 10px 0 0;
-    background: rgba(224,101,101,0.08);
-    border-radius: 50px;
-    padding: 4px;
+    margin: 12px 0 0;
+    background: rgba(220,106,106,0.08);
+    border-radius: 60px;
+    padding: 6px;
   }
 
-  /* 霓虹启动按钮 */
+  /* Nút bắt đầu lộng lẫy */
   .btn-start {
     width: 100%;
-    background: linear-gradient(105deg, #185FA5 0%, #2E4AAD 100%);
+    background: linear-gradient(105deg, #1865af, #2f4ec2);
     border: none;
-    border-radius: 44px;
-    padding: 14px;
-    font-weight: 700;
+    border-radius: 50px;
+    padding: 15px;
+    font-weight: 800;
     font-size: 14px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.15em;
     color: white;
     text-transform: uppercase;
     cursor: pointer;
-    margin-top: 1.6rem;
+    margin-top: 1.7rem;
     transition: all 0.25s;
     font-family: 'Inter', sans-serif;
-    box-shadow: 0 8px 18px rgba(24,95,165,0.3);
+    box-shadow: 0 12px 22px rgba(24,101,175,0.4);
   }
   .btn-start:hover {
-    background: linear-gradient(105deg, #0F4A82, #1F3C97);
+    background: linear-gradient(105deg, #0f5190, #253faa);
     transform: scale(1.02);
-    box-shadow: 0 12px 24px rgba(24,95,165,0.4);
+    box-shadow: 0 16px 28px rgba(24,101,175,0.5);
   }
 
-  /* timer 装饰 */
+  /* Vòng tròn động lực */
   .timer-tag {
     display: inline-block;
-    background: rgba(24, 95, 165, 0.12);
+    background: rgba(34,115,185,0.12);
     backdrop-filter: blur(4px);
-    border: 1px solid rgba(24,95,165,0.4);
-    border-radius: 60px;
-    padding: 6px 18px;
+    border: 1px solid rgba(34,115,185,0.5);
+    border-radius: 80px;
+    padding: 7px 22px;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 800;
     letter-spacing: 0.05em;
-    color: #185FA5;
-    margin-bottom: 1.3rem;
-    transition: 0.2s;
+    color: #1865af;
+    margin-bottom: 1.2rem;
   }
 
-  /* 环形动画 & 现代质感 */
   .ring-wrap {
     display: flex;
     justify-content: center;
-    margin: 0 0 0.8rem;
-    filter: drop-shadow(0 8px 14px rgba(0,0,0,0.1));
-  }
-  .ring-svg {
-    display: block;
-    transition: all 0.2s;
+    margin: 0.5rem 0 1rem;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.12));
   }
   .ring-track {
     fill: none;
     stroke: #e2dfd4;
-    stroke-width: 8;
+    stroke-width: 9;
   }
   .ring-prog {
     fill: none;
-    stroke-width: 8;
+    stroke-width: 9;
     stroke-linecap: round;
-    transition: stroke-dashoffset 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2);
-    filter: drop-shadow(0 0 3px rgba(24,95,165,0.5));
+    transition: stroke-dashoffset 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    filter: drop-shadow(0 0 4px rgba(35, 120, 200, 0.4));
   }
-  /* 数字活力 */
-  #rMins { fill: #101010; font-weight: 700; font-size: 48px; }
-  #rUnit { fill: #7e7a6e; font-weight: 500; }
-  #rSecs { fill: #185FA5; font-weight: 600; letter-spacing: 0.5px; }
+  #rMins { fill: #1f2c36; font-weight: 800; font-size: 50px; }
+  #rUnit { fill: #8f8a7a; font-weight: 600; }
+  #rSecs { fill: #226bb3; font-weight: 700; letter-spacing: 0.3px; }
 
-  /* 卡片内统计 灵动卡片 */
+  /* Thống kê */
   .stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin: 1rem 0 1.2rem;
+    gap: 12px;
+    margin: 1.2rem 0 1.2rem;
   }
   .stat {
-    background: #f7f5ef;
-    border-radius: 24px;
-    padding: 10px 6px;
+    background: #f8f6f0;
+    border-radius: 28px;
+    padding: 12px 5px;
     text-align: center;
-    border: 1px solid #e4e1d6;
-    transition: transform 0.2s, background 0.2s;
+    border: 1px solid #eae5d9;
+    transition: all 0.2s;
   }
-  .stat:hover { transform: translateY(-2px); background: #ffffff; border-color: #ccc6b8; }
+  .stat:hover { transform: translateY(-3px); background: white; border-color: #cdc7b8; }
   .stat-n {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #1e2b36;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1c3f59;
     font-family: 'Space Mono', monospace;
   }
   .stat-l {
     font-size: 9px;
     text-transform: uppercase;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    color: #a09b8c;
-    margin-top: 3px;
+    letter-spacing: 0.1em;
+    color: #aaa392;
+    margin-top: 4px;
   }
 
-  /* 进度条 细腻 */
   .prog-bg {
-    background: #e2dfd4;
-    border-radius: 40px;
+    background: #e1ddd1;
+    border-radius: 50px;
     height: 6px;
     overflow: hidden;
-    margin: 8px 0 6px;
+    margin: 10px 0 6px;
   }
   .prog-bar {
     height: 100%;
-    background: linear-gradient(90deg, #185FA5, #6d5dd6);
-    border-radius: 40px;
-    transition: width 0.45s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+    background: linear-gradient(90deg, #1b6cb7, #745edb);
+    border-radius: 50px;
+    transition: width 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     width: 0%;
   }
   .prog-meta {
     display: flex;
     justify-content: space-between;
     font-size: 10px;
-    font-weight: 500;
-    color: #878272;
+    font-weight: 600;
+    color: #968f7e;
     margin-bottom: 1rem;
   }
   .end-info {
     text-align: center;
     font-size: 12px;
     font-family: 'Space Mono', monospace;
-    background: #f0ede5;
-    border-radius: 60px;
-    padding: 8px 12px;
+    background: #f2efe7;
+    border-radius: 80px;
+    padding: 9px 14px;
     margin-bottom: 1.2rem;
-    color: #4d4a40;
-    border: 1px solid #dbd6c9;
-    backdrop-filter: blur(2px);
+    color: #5b5648;
+    border: 1px solid #e0dacd;
   }
   .end-info strong {
-    color: #185FA5;
-    font-weight: 700;
+    color: #1f6ebb;
+    font-weight: 800;
   }
   .btn-reset {
     width: 100%;
     background: transparent;
-    border: 1.5px solid #dbd6c9;
-    border-radius: 44px;
+    border: 1.5px solid #ddd8ca;
+    border-radius: 50px;
     padding: 12px;
     font-size: 12px;
-    font-weight: 600;
-    color: #6b6658;
+    font-weight: 700;
+    color: #7d7767;
     cursor: pointer;
     transition: all 0.25s;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.1em;
   }
   .btn-reset:hover {
-    background: #e9e6de;
-    border-color: #185FA5;
-    color: #185FA5;
-    transform: scale(0.98);
+    background: #eae6dc;
+    border-color: #2273b9;
+    color: #2273b9;
+    transform: scale(0.97);
   }
 
-  /* 完成画面 绚烂 */
+  /* Màn hình hoàn thành rực rỡ */
   .done-body {
     text-align: center;
-    padding: 3rem 1.8rem;
-    background: linear-gradient(145deg, #fcfbf9, #fff);
-    border-radius: 36px;
+    padding: 3rem 2rem;
+    background: linear-gradient(145deg, #fffefb, #fefcf7);
+    border-radius: 48px;
   }
   .done-icon {
-    font-size: 4.2rem;
-    margin-bottom: 0.75rem;
-    animation: bouncePop 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
+    font-size: 5rem;
+    margin-bottom: 0.8rem;
+    animation: bungNo 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
   }
-  @keyframes bouncePop {
-    0% { transform: scale(0.5); opacity: 0; }
-    70% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
+  @keyframes bungNo {
+    0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+    70% { transform: scale(1.15) rotate(2deg); }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
   }
   .done-title {
-    font-size: 2.1rem;
+    font-size: 2.3rem;
     font-weight: 800;
-    background: linear-gradient(125deg, #185FA5, #6942e0);
+    background: linear-gradient(125deg, #1465aa, #5c42d6);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
   }
   .done-sub {
-    font-size: 14px;
-    color: #6f6b60;
+    font-size: 15px;
+    color: #7b7565;
     margin-bottom: 2rem;
+    font-weight: 500;
   }
 
-  /* dark mode 精致加强 */
+  /* Dark mode đẳng cấp */
   @media (prefers-color-scheme: dark) {
-    body { background: #131313; background: radial-gradient(circle at 30% 20%, #1c1c1e, #0f0f10); }
-    body::before { background: radial-gradient(circle at 70% 20%, rgba(24,95,165,0.12), rgba(83,74,183,0.08)); }
-    .card { background: rgba(26, 26, 30, 0.94); backdrop-filter: blur(3px); border-color: #323237; box-shadow: 0 20px 35px -12px black; }
-    .main-title { background: linear-gradient(135deg, #cadcf0, #96b4dd); background-clip: text; -webkit-background-clip: text; color: transparent; }
-    .tabs { background: #202024; }
-    .tab { color: #9d9b92; }
-    .tab.active { background: #2c2c32; color: #6ca9f0; }
-    .field { background: #1e1e22; border-color: #3a3a40; color: #f2eee7; }
-    .stat { background: #1e1e22; border-color: #2f2f35; }
-    .stat-n { color: #efede5; }
-    .end-info { background: #1b1b1f; border-color: #323236; color: #b6b1a4; }
-    .btn-reset { border-color: #3a3a40; color: #b1ab9c; }
-    .btn-reset:hover { background: #2a2a2f; color: #7bb2f0; border-color: #6ca9f0; }
-    .prog-bg { background: #2c2c30; }
-    #rMins { fill: #efede5; }
-    .timer-tag { background: rgba(108,169,240,0.18); border-color: #3682cf; color: #7bb2f0; }
-    .badge { background: rgba(108,169,240,0.15); border-color: #2d6ead; color: #8ebaf5; }
-    .badge-dot { background: #6ca9f0; box-shadow: 0 0 6px #378add; }
-    .done-body { background: #202024; }
-    .done-sub { color: #aaa69b; }
+    body { background: radial-gradient(ellipse at 30% 20%, #141416, #0b0b0e); }
+    body::before { background: radial-gradient(circle at 60% 30%, rgba(34,115,185,0.15), rgba(83,74,183,0.08)); }
+    .card { background: rgba(28, 28, 34, 0.96); border-color: #35353c; }
+    .main-title { background: linear-gradient(135deg, #bed9ff, #8fb2e6); background-clip: text; -webkit-background-clip: text; }
+    .tabs { background: #212127; }
+    .tab { color: #b1ab9a; }
+    .tab.active { background: #2e2e36; color: #72b0f0; }
+    .field { background: #202026; border-color: #3f3f48; color: #efede5; }
+    .stat { background: #232329; border-color: #3a3a44; }
+    .stat-n { color: #e6e4dc; }
+    .end-info { background: #1e1e24; border-color: #3a3a44; color: #cbc5b5; }
+    .btn-reset { border-color: #444450; color: #bdb7a6; }
+    .btn-reset:hover { background: #2c2c34; color: #79b5f5; border-color: #6ca9f0; }
+    .prog-bg { background: #2e2e38; }
+    #rMins { fill: #f0ede5; }
+    .timer-tag { background: rgba(108,169,240,0.18); border-color: #468ad0; color: #84bbf5; }
+    .badge { background: rgba(108,169,240,0.14); border-color: #2e6eae; color: #8bbcf5; }
+    .done-body { background: #25252c; }
+    .done-sub { color: #b9b3a2; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="badge"><span class="badge-dot"></span> CHRONOS · 永恒韵律</div>
-  <div class="main-title">倒计时 <em>流光</em></div>
+  <div class="badge"><span class="badge-dot"></span> CHRONOS · THỜI GIAN TINH TẾ</div>
+  <div class="main-title">ĐẾM <em>NGƯỢC</em> PHONG CÁCH</div>
 
-  <!-- 设置卡片 -->
+  <!-- Thẻ thiết lập -->
   <div class="card" id="setupCard">
     <div class="card-body">
       <div class="tabs">
-        <button class="tab active" id="tabMin">⌛ 分钟模式</button>
-        <button class="tab" id="tabRange">⏰ 时段模式</button>
+        <button class="tab active" id="tabMin">⏱️ Số phút</button>
+        <button class="tab" id="tabRange">⏰ Khung giờ</button>
       </div>
       <div id="minsPanel">
-        <label class="lbl">⏱️ 设定分钟</label>
-        <input class="field" type="number" id="minsInput" value="35" min="1" max="9999" placeholder="例如 25">
-        <div class="hint">✨ 范围 1 – 9999 分钟，任意时长</div>
+        <label class="lbl">📆 NHẬP SỐ PHÚT</label>
+        <input class="field" type="number" id="minsInput" value="35" min="1" max="9999" placeholder="Ví dụ: 45">
+        <div class="hint">✨ Từ 1 đến 9999 phút – mọi khoảng linh hoạt</div>
       </div>
       <div id="rangePanel" style="display:none">
         <div class="time-row">
           <div>
-            <label class="lbl">🌅 起始时间</label>
+            <label class="lbl">🌅 GIỜ BẮT ĐẦU</label>
             <input class="field" type="time" id="fromTime" value="14:15">
           </div>
           <div class="arrow-div">⟶</div>
           <div>
-            <label class="lbl">🌇 结束时间</label>
+            <label class="lbl">🌇 GIỜ KẾT THÚC</label>
             <input class="field" type="time" id="toTime" value="17:30">
           </div>
         </div>
-        <div class="hint">🎯 跨越午夜自动计算，最多48h内有效</div>
+        <div class="hint">🎯 Tự động tính chênh lệch, hỗ trợ qua nửa đêm</div>
       </div>
       <div class="err" id="errMsg"></div>
-      <button class="btn-start" id="startBtn">✨ 启动计时 ✨</button>
+      <button class="btn-start" id="startBtn">✨ BẮT ĐẦU NGAY ✨</button>
     </div>
   </div>
 
-  <!-- 计时器卡片 -->
+  <!-- Thẻ đếm ngược chính -->
   <div class="card" id="timerCard" style="display:none">
     <div class="card-body">
       <div style="text-align:center">
-        <span class="timer-tag" id="timerTag">⚡ 待命</span>
+        <span class="timer-tag" id="timerTag">⚡ ĐANG TÍNH</span>
       </div>
       <div class="ring-wrap">
         <svg class="ring-svg" viewBox="0 0 220 220" width="220" height="220">
           <defs>
-            <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#185FA5"/>
-              <stop offset="60%" stop-color="#4B3BB8"/>
-              <stop offset="100%" stop-color="#8F73E6"/>
+            <linearGradient id="gradientVip" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1b6cb7"/>
+              <stop offset="55%" stop-color="#4a38c4"/>
+              <stop offset="100%" stop-color="#9b7bea"/>
             </linearGradient>
           </defs>
           <circle class="ring-track" cx="110" cy="110" r="98" transform="rotate(-90 110 110)"/>
-          <circle class="ring-prog" id="ringProg" cx="110" cy="110" r="98" transform="rotate(-90 110 110)" stroke="url(#rg)" stroke-dasharray="615.75" stroke-dashoffset="0"/>
-          <text id="rMins" x="110" y="104" text-anchor="middle" font-size="48" font-weight="700" fill="#111" font-family="'Space Mono',monospace">00</text>
-          <text id="rUnit" x="110" y="124" text-anchor="middle" font-size="13" fill="#777" font-family="'Inter',sans-serif">分钟</text>
-          <text id="rSecs" x="110" y="148" text-anchor="middle" font-size="15" fill="#185FA5" font-family="'Space Mono',monospace" font-weight="600">00 秒</text>
+          <circle class="ring-prog" id="ringProg" cx="110" cy="110" r="98" transform="rotate(-90 110 110)" stroke="url(#gradientVip)" stroke-dasharray="615.75" stroke-dashoffset="0"/>
+          <text id="rMins" x="110" y="104" text-anchor="middle" font-size="48" font-weight="800" fill="#111" font-family="'Space Mono',monospace">00</text>
+          <text id="rUnit" x="110" y="124" text-anchor="middle" font-size="13" fill="#888" font-family="'Inter',sans-serif">phút</text>
+          <text id="rSecs" x="110" y="148" text-anchor="middle" font-size="15" fill="#1f6ebb" font-family="'Space Mono',monospace" font-weight="700">00 giây</text>
         </svg>
       </div>
       <div class="stats">
-        <div class="stat"><div class="stat-n" id="sPct">0%</div><div class="stat-l">已流逝</div></div>
-        <div class="stat"><div class="stat-n" id="sRem">--</div><div class="stat-l">剩余时间</div></div>
-        <div class="stat"><div class="stat-n" id="sTotal">--</div><div class="stat-l">总时长</div></div>
+        <div class="stat"><div class="stat-n" id="sPct">0%</div><div class="stat-l">ĐÃ TRÔI QUA</div></div>
+        <div class="stat"><div class="stat-n" id="sRem">--</div><div class="stat-l">CÒN LẠI</div></div>
+        <div class="stat"><div class="stat-n" id="sTotal">--</div><div class="stat-l">TỔNG</div></div>
       </div>
       <div class="prog-bg"><div class="prog-bar" id="progBar"></div></div>
-      <div class="prog-meta"><span id="progL">0% 流逝</span><span id="progR">-- 秒剩余</span></div>
-      <div class="end-info">🏁 预计完成于 <strong id="endAt">--:--:--</strong></div>
-      <button class="btn-reset" id="resetBtn">↻ 重置倒计时</button>
+      <div class="prog-meta"><span id="progL">0% đã qua</span><span id="progR">-- giây còn</span></div>
+      <div class="end-info">🏁 KẾT THÚC LÚC <strong id="endAt">--:--:--</strong></div>
+      <button class="btn-reset" id="resetBtn">↻ ĐẶT LẠI</button>
     </div>
   </div>
 
-  <!-- 完成卡片 美轮美奂 -->
+  <!-- Thẻ hoàn thành hoành tráng -->
   <div class="card" id="doneCard" style="display:none">
     <div class="done-body">
-      <div class="done-icon">🎉✨🏆</div>
-      <div class="done-title">完美收官</div>
-      <div class="done-sub" id="doneMsg">时间交响曲 · 荣耀落幕</div>
-      <button class="btn-start" id="doneResetBtn" style="max-width:210px; margin:0 auto; display:block; background: linear-gradient(105deg, #2c5c8c, #5438bf);">♻️ 重新启程</button>
+      <div class="done-icon">🏆✨🎉</div>
+      <div class="done-title">HOÀN HẢO!</div>
+      <div class="done-sub" id="doneMsg">Chúc mừng! Bạn đã kết thúc chuỗi thời gian đầy cảm hứng.</div>
+      <button class="btn-start" id="doneResetBtn" style="max-width:220px; margin:0 auto; display:block;">⟳ LÀM LẠI</button>
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  const CIRCUM = 615.75;
-  let activeMode = 'mins';        // 'mins' or 'range'
+  const CIRCLE_LEN = 615.75;
+  let currentMode = 'mins';     // 'mins' hoặc 'range'
   let timerInterval = null;
-  let targetTimestamp = null;
+  let targetTimestampMs = null;
   let totalDurationMs = null;
-  
-  const DOM = {
+
+  // DOM elements
+  const dom = {
     setupCard: document.getElementById('setupCard'),
     timerCard: document.getElementById('timerCard'),
     doneCard: document.getElementById('doneCard'),
@@ -552,171 +556,165 @@
     progBar: document.getElementById('progBar'),
     progL: document.getElementById('progL'),
     progR: document.getElementById('progR'),
-    endAt: document.getElementById('endAt')
+    endAt: document.getElementById('endAt'),
+    doneMsg: document.getElementById('doneMsg')
   };
 
-  function formatDurationHuman(ms) {
+  // Helper: format thời gian đẹp
+  function formatThoiGian(ms) {
     if (ms <= 0) return '0s';
-    const totalSec = Math.ceil(ms / 1000);
-    const hours = Math.floor(totalSec / 3600);
-    const minutes = Math.floor((totalSec % 3600) / 60);
-    const secs = totalSec % 60;
-    if (hours > 0) return `${hours}h ${minutes}m ${secs}s`;
-    if (minutes > 0) return `${minutes}m ${secs}s`;
-    return `${secs}s`;
+    const giay = Math.ceil(ms / 1000);
+    const gio = Math.floor(giay / 3600);
+    const phut = Math.floor((giay % 3600) / 60);
+    const s = giay % 60;
+    if (gio > 0) return `${gio}h ${phut}p ${s}s`;
+    if (phut > 0) return `${phut}p ${s}s`;
+    return `${s}s`;
   }
 
-  function formatClockTime(date) {
+  function formatGioDay(date) {
     return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   }
 
-  function showOnlyCard(cardId) {
-    DOM.setupCard.style.display = 'none';
-    DOM.timerCard.style.display = 'none';
-    DOM.doneCard.style.display = 'none';
-    if (cardId === 'setup') DOM.setupCard.style.display = 'block';
-    if (cardId === 'timer') DOM.timerCard.style.display = 'block';
-    if (cardId === 'done') DOM.doneCard.style.display = 'block';
+  function showCard(cardId) {
+    dom.setupCard.style.display = 'none';
+    dom.timerCard.style.display = 'none';
+    dom.doneCard.style.display = 'none';
+    if (cardId === 'setup') dom.setupCard.style.display = 'block';
+    if (cardId === 'timer') dom.timerCard.style.display = 'block';
+    if (cardId === 'done') dom.doneCard.style.display = 'block';
   }
 
-  function stopTimer() {
+  function stopDemNguoc() {
     if (timerInterval) {
       clearInterval(timerInterval);
       timerInterval = null;
     }
   }
 
-  function resetEverything() {
-    stopTimer();
-    targetTimestamp = null;
+  function resetToSetup() {
+    stopDemNguoc();
+    targetTimestampMs = null;
     totalDurationMs = null;
-    showOnlyCard('setup');
-    DOM.errMsg.innerText = '';
+    showCard('setup');
+    dom.errMsg.innerText = '';
   }
 
-  // 计时器核心刷新（优雅动画）
-  function updateTimerDisplay() {
-    if (!targetTimestamp || !totalDurationMs) return;
+  // Cập nhật giao diện khi đếm
+  function updateTimerFace() {
+    if (!targetTimestampMs || !totalDurationMs) return;
     const now = Date.now();
-    let remaining = targetTimestamp - now;
-    if (remaining <= 0) {
-      // 倒计时结束
-      stopTimer();
-      DOM.doneMsg.innerText = `🎉 辉煌完成 · 总计 ${Math.round(totalDurationMs / 60000)} 分钟 🎉`;
-      showOnlyCard('done');
+    let conLai = targetTimestampMs - now;
+    if (conLai <= 0) {
+      stopDemNguoc();
+      const tongPhut = Math.round(totalDurationMs / 60000);
+      dom.doneMsg.innerText = `🎉 Xuất sắc! Bạn đã hoàn thành ${tongPhut} phút. Thời gian vàng 🎉`;
+      showCard('done');
       return;
     }
+    const daQua = totalDurationMs - conLai;
+    let phanTram = Math.min(1, Math.max(0, daQua / totalDurationMs));
+    let pctInt = Math.floor(phanTram * 100);
+    const giayConLai = Math.ceil(conLai / 1000);
+    const phutCon = Math.floor(giayConLai / 60);
+    const giayCon = giayConLai % 60;
 
-    const elapsed = totalDurationMs - remaining;
-    const percent = Math.min(1, Math.max(0, elapsed / totalDurationMs));
-    const percentInt = Math.floor(percent * 100);
-
-    const remainingSec = Math.ceil(remaining / 1000);
-    const minsLeft = Math.floor(remainingSec / 60);
-    const secsLeft = remainingSec % 60;
-
-    // 更新环形进度
-    const offset = CIRCUM * (1 - percent);
-    DOM.ringProg.style.strokeDashoffset = offset;
-
-    // 更新数字及UI
-    DOM.rMins.textContent = String(minsLeft).padStart(2, '0');
-    DOM.rSecs.textContent = String(secsLeft).padStart(2, '0') + ' 秒';
-    DOM.sPct.textContent = percentInt + '%';
-    DOM.sRem.textContent = formatDurationHuman(remaining);
-    DOM.sTotal.textContent = formatDurationHuman(totalDurationMs);
-    DOM.progBar.style.width = percentInt + '%';
-    DOM.progL.textContent = percentInt + '% 已流逝';
-    DOM.progR.textContent = remainingSec + ' 秒 剩余';
+    // Cập nhật vòng tròn
+    const offset = CIRCLE_LEN * (1 - phanTram);
+    dom.ringProg.style.strokeDashoffset = offset;
+    dom.rMins.textContent = String(phutCon).padStart(2, '0');
+    dom.rSecs.textContent = String(giayCon).padStart(2, '0') + ' giây';
+    dom.sPct.textContent = pctInt + '%';
+    dom.sRem.textContent = formatThoiGian(conLai);
+    dom.sTotal.textContent = formatThoiGian(totalDurationMs);
+    dom.progBar.style.width = pctInt + '%';
+    dom.progL.textContent = pctInt + '% đã qua';
+    dom.progR.textContent = giayConLai + ' giây còn';
   }
 
-  function launchTimer(durationMs, labelText, endDateObj) {
-    if (durationMs <= 0) {
-      DOM.errMsg.innerText = '❌ 无效时长，请重新设定';
+  function khoiDongTimer(thoiLuongMs, nhanText, thoiDiemKetThuc) {
+    if (thoiLuongMs <= 0) {
+      dom.errMsg.innerText = '⚠️ Thời lượng không hợp lệ, vui lòng chọn lại.';
       return false;
     }
-    stopTimer();
-    totalDurationMs = durationMs;
-    targetTimestamp = Date.now() + durationMs;
-    DOM.timerTag.textContent = labelText;
-    DOM.endAt.textContent = formatClockTime(endDateObj);
-    // 预置显示
-    updateTimerDisplay();
-    showOnlyCard('timer');
-    timerInterval = setInterval(() => updateTimerDisplay(), 200);
+    stopDemNguoc();
+    totalDurationMs = thoiLuongMs;
+    targetTimestampMs = Date.now() + thoiLuongMs;
+    dom.timerTag.textContent = nhanText;
+    dom.endAt.textContent = formatGioDay(thoiDiemKetThuc);
+    updateTimerFace();
+    showCard('timer');
+    timerInterval = setInterval(() => updateTimerFace(), 200);
     return true;
   }
 
-  function onStartFlow() {
-    DOM.errMsg.innerText = '';
-    if (activeMode === 'mins') {
-      let minsValue = parseInt(DOM.minsInput.value, 10);
-      if (isNaN(minsValue) || minsValue < 1) {
-        DOM.errMsg.innerText = '⏳ 请输入有效的分钟数 (≥1)';
+  function xuLyBatDau() {
+    dom.errMsg.innerText = '';
+    if (currentMode === 'mins') {
+      let soPhut = parseInt(dom.minsInput.value, 10);
+      if (isNaN(soPhut) || soPhut < 1) {
+        dom.errMsg.innerText = '⏳ Nhập số phút hợp lệ (tối thiểu 1)';
         return;
       }
-      if (minsValue > 9999) {
-        DOM.errMsg.innerText = '🔁 分钟最大为 9999，保持合理区间';
+      if (soPhut > 9999) {
+        dom.errMsg.innerText = '🔁 Số phút tối đa 9999, hãy nhập lại.';
         return;
       }
-      const duration = minsValue * 60000;
-      const endDate = new Date(Date.now() + duration);
-      launchTimer(duration, `${minsValue} 分钟 · 专注之旅`, endDate);
+      const duration = soPhut * 60000;
+      const ketThuc = new Date(Date.now() + duration);
+      khoiDongTimer(duration, `${soPhut} phút · Tập trung cao độ`, ketThuc);
     } 
-    else { // range模式：区间时段
-      const fromVal = DOM.fromTime.value;
-      const toVal = DOM.toTime.value;
-      if (!fromVal || !toVal) {
-        DOM.errMsg.innerText = '🌙 请完整填写起止时间';
+    else {  // chế độ khung giờ
+      const startVal = dom.fromTime.value;
+      const endVal = dom.toTime.value;
+      if (!startVal || !endVal) {
+        dom.errMsg.innerText = '🌙 Vui lòng chọn đủ giờ bắt đầu và kết thúc';
         return;
       }
-      let [fromHour, fromMin] = fromVal.split(':').map(Number);
-      let [toHour, toMin] = toVal.split(':').map(Number);
-      let fromTotal = fromHour * 60 + fromMin;
-      let toTotal = toHour * 60 + toMin;
-      if (toTotal <= fromTotal) toTotal += 1440; // 跨午夜逻辑
-      let diffMinutes = toTotal - fromTotal;
-      if (diffMinutes <= 0 || diffMinutes > 2880) {
-        DOM.errMsg.innerText = '⛔ 时段须大于0分钟且不超过48小时';
+      let [startH, startM] = startVal.split(':').map(Number);
+      let [endH, endM] = endVal.split(':').map(Number);
+      let startTong = startH * 60 + startM;
+      let endTong = endH * 60 + endM;
+      if (endTong <= startTong) endTong += 1440;   // qua nửa đêm
+      let chenhLechPhut = endTong - startTong;
+      if (chenhLechPhut <= 0 || chenhLechPhut > 2880) {
+        dom.errMsg.innerText = '⛔ Khoảng thời gian không hợp lệ (phải >0 và <= 48h)';
         return;
       }
-      const durationMs = diffMinutes * 60000;
-      const endDate = new Date(Date.now() + durationMs);
-      const label = `${fromVal} → ${toVal}  (${diffMinutes}分)`;
-      launchTimer(durationMs, label, endDate);
+      const durationMs = chenhLechPhut * 60000;
+      const ketThuc = new Date(Date.now() + durationMs);
+      khoiDongTimer(durationMs, `${startVal} → ${endVal} (${chenhLechPhut} phút)`, ketThuc);
     }
   }
 
-  function setActiveMode(mode) {
-    activeMode = mode;
+  function setMode(mode) {
+    currentMode = mode;
     if (mode === 'mins') {
-      DOM.minsPanel.style.display = 'block';
-      DOM.rangePanel.style.display = 'none';
-      DOM.tabMin.classList.add('active');
-      DOM.tabRange.classList.remove('active');
+      dom.minsPanel.style.display = 'block';
+      dom.rangePanel.style.display = 'none';
+      dom.tabMin.classList.add('active');
+      dom.tabRange.classList.remove('active');
     } else {
-      DOM.minsPanel.style.display = 'none';
-      DOM.rangePanel.style.display = 'block';
-      DOM.tabMin.classList.remove('active');
-      DOM.tabRange.classList.add('active');
+      dom.minsPanel.style.display = 'none';
+      dom.rangePanel.style.display = 'block';
+      dom.tabMin.classList.remove('active');
+      dom.tabRange.classList.add('active');
     }
-    DOM.errMsg.innerText = '';
+    dom.errMsg.innerText = '';
   }
 
-  // 事件绑定
-  DOM.tabMin.addEventListener('click', () => setActiveMode('mins'));
-  DOM.tabRange.addEventListener('click', () => setActiveMode('range'));
-  DOM.startBtn.addEventListener('click', onStartFlow);
-  DOM.resetBtn.addEventListener('click', resetEverything);
-  DOM.doneResetBtn.addEventListener('click', resetEverything);
+  // Gán sự kiện
+  dom.tabMin.addEventListener('click', () => setMode('mins'));
+  dom.tabRange.addEventListener('click', () => setMode('range'));
+  dom.startBtn.addEventListener('click', xuLyBatDau);
+  dom.resetBtn.addEventListener('click', resetToSetup);
+  dom.doneResetBtn.addEventListener('click', resetToSetup);
 
-  // 初始默认分钟模式展示，设定默认下午时段展示友好
-  setActiveMode('mins');
-  // 设置time默认语义化
-  if(DOM.fromTime) DOM.fromTime.value = "14:15";
-  if(DOM.toTime) DOM.toTime.value = "17:30";
-  // 初始化环形偏移为0
-  DOM.ringProg.style.strokeDashoffset = "0";
+  // Khởi tạo mặc định chế độ phút
+  setMode('mins');
+  dom.fromTime.value = "14:15";
+  dom.toTime.value = "17:30";
+  dom.ringProg.style.strokeDashoffset = "0";
 })();
 </script>
 </body>
